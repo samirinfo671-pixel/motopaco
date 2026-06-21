@@ -1,0 +1,29 @@
+# Dependency directories
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build directories
+dist/
+client/dist/
+server/dist/
+
+# SQLite database files
+*.db
+*.db-journal
+server/data.db
+data.db
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS files
+.DS_Store
+
+# Uploads directory contents (ignore actual uploaded files, keep directory structure)
+server/uploads/*
+!server/uploads/.gitkeep

@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #f5f5f5;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: #333;
+    font-family: 'Montserrat', 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F9FAFB;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #E63012;
+  }
+
+  /* Focus rings */
+  input:focus, select:focus, textarea:focus, button:focus-visible {
+    outline: 2px solid #E63012 !important;
+    outline-offset: 1px;
+  }
+}
+
+@layer utilities {
+  /* Glow overlay */
+  .red-glow {
+    box-shadow: 0 8px 32px rgba(230, 48, 18, 0.25);
+  }
+  .red-glow-hover:hover {
+    box-shadow: 0 12px 40px rgba(230, 48, 18, 0.4);
+  }
+
+  /* Race headline style */
+  .race-livery {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Custom WooCommerce-grade Section Title */
+  .section-title {
+    font-family: 'Montserrat', sans-serif !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    color: rgb(0, 0, 0) !important;
+    font-size: 20px !important;
+    line-height: 20px !important;
+    text-transform: uppercase !important;
+  }
+}
+
+/* Background Noise Overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.008;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Scrolling Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
+/* Infinite Brand Loop Animation */
+@keyframes brandLoop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-brand-loop {
+  display: flex;
+  width: max-content;
+  animation: brandLoop 30s linear infinite;
+}
+
+/* WooCommerce HTML Description Formatting */
+.html-description {
+  color: #111827;
+}
+.html-description p {
+  margin-bottom: 0.75rem;
+}
+.html-description p:last-child {
+  margin-bottom: 0;
+}
+.html-description strong, .html-description b {
+  font-weight: 800;
+  color: #000;
+}
+.html-description ul, .html-description ol {
+  margin-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  list-style-type: disc;
+}
+.html-description ol {
+  list-style-type: decimal;
+}
+.html-description li {
+  margin-bottom: 0.25rem;
+}
+.html-description a {
+  color: #E63012;
+  text-decoration: underline;
+  font-weight: 700;
+}
+.html-description a:hover {
+  color: #000;
+}
+.html-description h1, .html-description h2, .html-description h3, .html-description h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: #000;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+.html-description h1 { font-size: 1.4rem; }
+.html-description h2 { font-size: 1.2rem; }
+.html-description h3 { font-size: 1.05rem; }
+
+/* Dark mode Editor support for contentEditable description area in admin panel */
+div[contenteditable].html-description {
+  color: #fff !important;
+}
+div[contenteditable].html-description strong, div[contenteditable].html-description b {
+  color: #fff !important;
+}
+div[contenteditable].html-description h1, div[contenteditable].html-description h2, div[contenteditable].html-description h3, div[contenteditable].html-description h4 {
+  color: #fff !important;
+}
+div[contenteditable].html-description a {
+  color: #ff5233 !important;
+}
+div[contenteditable].html-description a:hover {
+  color: #fff !important;
+}
+

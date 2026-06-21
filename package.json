@@ -1,0 +1,14 @@
+{
+  "name": "packmoto-monorepo",
+  "version": "1.0.0",
+  "description": "MOTO PACO Full-Stack Moto Accessories E-Commerce Store",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "build:all": "npm run build --prefix client && npm run build --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
