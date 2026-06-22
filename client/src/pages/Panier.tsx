@@ -76,6 +76,7 @@ export const Panier: React.FC = () => {
                         <img
                           src={item.product.primary_image}
                           alt={item.product.name}
+                          referrerPolicy="no-referrer"
                           className="w-16 h-16 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB]"
                         />
                         <div className="min-w-0">

@@ -544,7 +544,7 @@ export const Produit: React.FC = () => {
                           </div>
                         )}
                         <Link to={`/produit/${bp.slug}`} className="shrink-0 flex items-center gap-4 bg-white border border-gray-200 hover:border-black p-4 rounded-none transition-all group max-w-[280px] shadow-sm hover:shadow-md">
-                          <img src={bp.primary_image || `https://picsum.photos/seed/${bp.slug}/100/100`} alt={bp.name} className="w-16 h-16 object-contain bg-[#F9FAFB] border border-gray-100 p-1 group-hover:scale-105 transition-transform shrink-0" />
+                          <img src={bp.primary_image || `https://picsum.photos/seed/${bp.slug}/100/100`} alt={bp.name} referrerPolicy="no-referrer" className="w-16 h-16 object-contain bg-[#F9FAFB] border border-gray-100 p-1 group-hover:scale-105 transition-transform shrink-0" />
                           <div className="text-left min-w-0">
                             <p className="text-[9px] font-mono text-[#E63012] font-black uppercase tracking-wider">{bp.brand_name}</p>
                             <p className="text-xs text-[#111827] font-black truncate w-36 uppercase tracking-wide">{bp.name}</p>
@@ -676,7 +676,7 @@ export const Produit: React.FC = () => {
                       {item.sale_price !== null && (
                         <span className="absolute top-2 left-2 bg-[#E63012] text-white text-[8px] font-black uppercase px-1.5 py-0.5 z-10 rounded-sm">SOLDE</span>
                       )}
-                      <img src={imgUrl} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                      <img src={imgUrl} alt={item.name} referrerPolicy="no-referrer" className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => { const t = e.currentTarget; if (!t.src.includes('default')) t.src = 'https://picsum.photos/seed/default/600/600'; }}
                       />
                     </Link>
@@ -712,7 +712,7 @@ export const Produit: React.FC = () => {
                 return (
                   <div key={item.id} className="bg-white border border-gray-200 rounded p-3 sm:p-4 flex flex-col justify-between hover:border-[#E63012] hover:shadow-lg transition-all duration-300 group">
                     <Link to={`/produit/${item.slug}`} className="block overflow-hidden aspect-square bg-[#F9FAFB] rounded relative p-2 mb-3">
-                      <img src={imgUrl} alt={item.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
+                      <img src={imgUrl} alt={item.name} referrerPolicy="no-referrer" className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => { const t = e.currentTarget; if (!t.src.includes('default')) t.src = 'https://picsum.photos/seed/default/600/600'; }}
                       />
                     </Link>

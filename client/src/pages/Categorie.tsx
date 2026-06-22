@@ -52,6 +52,7 @@ export const Categorie: React.FC = () => {
             <img
               src={category.image_url}
               alt={catName}
+              referrerPolicy="no-referrer"
               className="absolute inset-0 w-full h-full object-cover opacity-40"
             />
           )}

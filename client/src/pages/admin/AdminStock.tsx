@@ -133,6 +133,7 @@ export const AdminStock: React.FC = () => {
                           <img
                             src={v.primary_image}
                             alt={v.product_name}
+                            referrerPolicy="no-referrer"
                             className="w-12 h-12 object-cover rounded-lg bg-black border border-gray-700 group-hover:border-gray-500 transition-colors"
                           />
                         </td>

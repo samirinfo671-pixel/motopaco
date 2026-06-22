@@ -749,6 +749,7 @@ export const AdminProducts: React.FC = () => {
                           <img
                             src={p.primary_image || 'https://placehold.co/100x100/111827/4B5563?text=NO+IMG'}
                             alt={p.name}
+                            referrerPolicy="no-referrer"
                             className="w-14 h-14 object-cover rounded-lg bg-gray-900 border border-gray-800 shadow-lg group-hover:scale-105 transition-transform"
                           />
                         </td>
@@ -1256,7 +1257,7 @@ export const AdminProducts: React.FC = () => {
                               <div className="flex items-center space-x-2">
                                 <label className="relative cursor-pointer group shrink-0">
                                   {v.image_url ? (
-                                    <img src={v.image_url} alt="v-thumb" className="w-10 h-10 object-cover rounded border border-gray-700 group-hover:opacity-75 transition-opacity" />
+                                    <img src={v.image_url} alt="v-thumb" referrerPolicy="no-referrer" className="w-10 h-10 object-cover rounded border border-gray-700 group-hover:opacity-75 transition-opacity" />
                                   ) : (
                                     <div className="w-10 h-10 rounded border-2 border-dashed border-gray-700 group-hover:border-[#E63012] flex items-center justify-center text-[10px] text-gray-500 group-hover:text-[#E63012] transition-colors bg-black/50">
                                       +
@@ -1393,7 +1394,7 @@ export const AdminProducts: React.FC = () => {
                       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6">
                         {productImages.map((img) => (
                           <div key={img.id} className="relative group bg-gray-900 border border-gray-800 rounded-xl p-3 flex flex-col items-center justify-between shadow-lg">
-                            <img src={img.url} alt="Gallery item" className="w-full h-28 object-cover rounded-lg bg-black border border-gray-800" />
+                            <img src={img.url} alt="Gallery item" referrerPolicy="no-referrer" className="w-full h-28 object-cover rounded-lg bg-black border border-gray-800" />
                             
                             <div className="mt-3 w-full flex flex-col gap-2">
                               {img.is_primary === 1 ? (

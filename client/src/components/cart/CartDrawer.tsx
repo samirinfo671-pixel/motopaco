@@ -225,6 +225,7 @@ export const CartDrawer: React.FC = () => {
                     <img
                       src={item.product.primary_image || '/placeholder-product.jpg'}
                       alt={item.product.name}
+                      referrerPolicy="no-referrer"
                       className="w-16 h-16 object-cover rounded-full bg-white border border-gray-200 flex-shrink-0"
                       onError={(e) => {
                         const t = e.currentTarget;
@@ -292,7 +293,7 @@ export const CartDrawer: React.FC = () => {
                   </p>
                   <div className="flex items-center justify-between bg-white p-3 rounded border border-gray-200">
                     <div className="flex items-center space-x-3">
-                      <img src={upsell.image} alt={upsell.name} className="w-10 h-10 object-cover rounded bg-gray-50 border border-gray-100" />
+                      <img src={upsell.image} alt={upsell.name} referrerPolicy="no-referrer" className="w-10 h-10 object-cover rounded bg-gray-50 border border-gray-100" />
                       <div className="min-w-0">
                         <p className="text-xs font-extrabold text-black truncate uppercase">{upsell.name}</p>
                         <p className="text-[10px] text-[#22C55E] font-black uppercase tracking-wider mt-0.5">Ajout en 1-clic (-10% de remise)</p>

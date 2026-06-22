@@ -4,7 +4,6 @@ import { generateOrderNumber } from '../utils/orderNumber.ts';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.ts';
 import { sendOrderEmails } from '../utils/mailer.ts';
 import { sendWhatsAppAlert } from '../utils/whatsapp.ts';
-import { proxyImageUrl } from '../utils/imageProxy.ts';
 
 const router = Router();
 
@@ -231,10 +230,7 @@ router.get('/:orderNumber', (req, res) => {
 
     res.json({
       ...order,
-      items: items.map(item => ({
-        ...item,
-        primary_image: proxyImageUrl(item.primary_image)
-      }))
+      items
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

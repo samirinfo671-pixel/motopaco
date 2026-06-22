@@ -61,6 +61,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, activeImageO
               <img
                 src={img.url}
                 alt={`Thumbnail ${idx + 1}`}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-contain p-1"
               />
             </button>
@@ -74,6 +75,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, activeImageO
           <img
             src={currentImage}
             alt={`Product View ${activeIndex + 1}`}
+            referrerPolicy="no-referrer"
             className="w-full h-full object-contain cursor-zoom-in p-2"
             onClick={() => setIsLightboxOpen(true)}
           />
@@ -131,6 +133,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, activeImageO
           <img
             src={currentImage}
             alt="Product Zoomed View"
+            referrerPolicy="no-referrer"
             className="max-w-full max-h-[85vh] object-contain rounded"
           />
 

@@ -422,6 +422,7 @@ export const Commande: React.FC = () => {
                     <img
                       src={item.product.primary_image}
                       alt={item.product.name}
+                      referrerPolicy="no-referrer"
                       className="w-12 h-12 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB]"
                     />
                     <div className="flex-1 min-w-0">

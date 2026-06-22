@@ -150,7 +150,7 @@ export const Confirmation: React.FC = () => {
                 <div key={item.id} className="flex justify-between items-center pt-4 first:pt-0">
                   <div className="flex items-center space-x-3">
                     {item.primary_image && (
-                      <img src={item.primary_image} alt={item.product_name} className="w-12 h-12 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB]" />
+                      <img src={item.primary_image} alt={item.product_name} referrerPolicy="no-referrer" className="w-12 h-12 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB]" />
                     )}
                     <div>
                       <h4 className="text-sm font-bold text-[#111827] leading-tight">{item.product_name}</h4>

@@ -197,6 +197,7 @@ export const InstagramFeed: React.FC = () => {
                   <img 
                     src={post.imageUrl} 
                     alt={post.caption} 
+                    referrerPolicy="no-referrer"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/post:scale-105"
                     loading="lazy"
                   />

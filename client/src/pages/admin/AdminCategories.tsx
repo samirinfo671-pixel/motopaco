@@ -128,7 +128,7 @@ export const AdminCategories: React.FC = () => {
                 <tr key={cat.id} className="hover:bg-white/5 transition-colors group">
                   <td className="p-5">
                     {cat.image_url ? (
-                      <img src={cat.image_url} alt={cat.name} className="h-12 w-12 object-cover rounded-lg border border-gray-700 group-hover:border-[#E63012] transition-colors" />
+                      <img src={cat.image_url} alt={cat.name} referrerPolicy="no-referrer" className="h-12 w-12 object-cover rounded-lg border border-gray-700 group-hover:border-[#E63012] transition-colors" />
                     ) : (
                       <div className="h-12 w-12 bg-black/50 border border-gray-700 rounded-lg flex items-center justify-center">
                         <ImageIcon className="h-5 w-5 text-gray-600" />
@@ -227,7 +227,7 @@ export const AdminCategories: React.FC = () => {
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Image de la Catégorie</label>
                   <div className="flex items-center gap-6 bg-white/5 border border-gray-800 rounded-xl p-4 shadow-inner">
                     {editingCategory.image_url ? (
-                      <img src={editingCategory.image_url} alt="Aperçu" className="w-20 h-20 object-cover rounded-lg border border-gray-700 shadow-md" />
+                      <img src={editingCategory.image_url} alt="Aperçu" referrerPolicy="no-referrer" className="w-20 h-20 object-cover rounded-lg border border-gray-700 shadow-md" />
                     ) : (
                       <div className="w-20 h-20 bg-black border border-gray-700 border-dashed rounded-lg flex items-center justify-center">
                         <ImageIcon className="w-8 h-8 text-gray-600" />
