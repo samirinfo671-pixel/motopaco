@@ -23,6 +23,7 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
 COPY server/src/db/schema.sql ./src/db/schema.sql
+COPY server/uploads ./uploads
 
 ENV PORT=5005
 ENV NODE_ENV=production
