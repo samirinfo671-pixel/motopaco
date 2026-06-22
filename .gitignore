@@ -28,3 +28,5 @@ data.db
 server/uploads/*
 !server/uploads/.gitkeep
 !server/uploads/instagram-*.png
+!server/uploads/cat-*.png
+!server/uploads/topcase-showcase.png

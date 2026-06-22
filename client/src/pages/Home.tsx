@@ -171,6 +171,7 @@ export const Home: React.FC = () => {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [dynamicCategories, setDynamicCategories] = useState<any[]>([]);
   const [bagageriePromos, setBagageriePromos] = useState<Product[]>([]);
+  const [bagagerieFeatured, setBagagerieFeatured] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [email, setEmail] = useState('');
@@ -193,17 +194,19 @@ export const Home: React.FC = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const [newRes, featRes, settingsRes, catRes, bagagerieRes] = await Promise.all([
+        const [newRes, featRes, settingsRes, catRes, bagagerieRes, bagSplitRes] = await Promise.all([
           api.get('/products/new-arrivals'),
           api.get('/products/featured'),
           api.get('/settings'),
           api.get('/categories'),
-          api.get('/products?promotions=true&limit=5')
+          api.get('/products?promotions=true&limit=5'),
+          api.get('/products?category=bagagerie-moto&limit=2')
         ]);
         setNewArrivals(newRes.data || []);
         setFeatured(featRes.data || []);
         setSettings(settingsRes.data || {});
         setBagageriePromos(bagagerieRes.data?.products || []);
+        setBagagerieFeatured(bagSplitRes.data?.products || []);
         
         const allCats = catRes.data || [];
         
@@ -582,7 +585,7 @@ export const Home: React.FC = () => {
                   <div key={i} className="bg-gray-50 rounded h-64 animate-pulse border border-gray-100" />
                 ))
               ) : (
-                featured.slice(0, 2).map((product) => (
+                (bagagerieFeatured.length >= 2 ? bagagerieFeatured : featured.slice(0, 2)).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))
               )}
@@ -599,7 +602,7 @@ export const Home: React.FC = () => {
           {/* Right: The Image with dynamic aspect ratios */}
           <div className="w-full lg:w-1/2 relative min-h-[300px] lg:min-h-0 bg-gray-100 overflow-hidden">
             <img
-              src="https://packmoto.com/img/cms/HOME%202024/Topcase-4.jpg"
+              src="/uploads/topcase-showcase.png"
               alt="Top Cases & Bagages"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
               loading="lazy"

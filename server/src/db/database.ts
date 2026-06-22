@@ -254,4 +254,56 @@ try {
   // Ignore if column already exists
 }
 
+// Migration: Force home limits to 15 and mark screenshot products as best sellers
+try {
+  // 1. Force setting limits to 15
+  db.prepare("INSERT INTO site_settings (key, value) VALUES ('home_featured_limit', '15') ON CONFLICT(key) DO UPDATE SET value = excluded.value").run();
+  db.prepare("INSERT INTO site_settings (key, value) VALUES ('home_new_arrivals_limit', '15') ON CONFLICT(key) DO UPDATE SET value = excluded.value").run();
+  console.log('[DB] Migration: forced home_featured_limit and home_new_arrivals_limit to 15.');
+
+  // 2. Clear previous best sellers
+  db.prepare("UPDATE products SET is_bestseller = 0").run();
+
+  // 3. Mark specific screenshot products as best sellers
+  const bestsellerSlugs = [
+    'tcx-pulse-boots',
+    'visiere-agv-k1-k1s-k3sv-k5-k5s',
+    'visiere-agv-k1-s-k3sv-k5-k5s',
+    'lentille-visee-casque-moto-agv-k1-k1s-k5-k5s-k3-sv-noir',
+    'tcx-zeta-wp-black-red',
+    'agv-k1-s-blipper-grey-red',
+    'dainese-energyca-air-bottes-black-anthracite',
+    'pare-carters-givi-tn2171-yamaha-tracer-9-gt-gt-plus-2025',
+    'tcx-zeta-wp-black',
+    'agv-k1-s-e2206-track-46',
+    'chaussures-moto-dainese-dinamica',
+    'dainese-dinamica-bottes-moto',
+    'dainese-dinamica-bottes-moto-sportives-black-fluo',
+    'lentille-visee-casque-moto-agv-k1-k1s-k5-k5s-k3-sv-dore-2',
+    'lentille-visee-casque-moto-agv-k1-k1s-k5-k5s-k3-sv-dore-3',
+    'tcx-infinity-3-wp-bottes-moto-impermeables-touring',
+    'boitier-telepeage-givi-s604-noir',
+    'bottes-moto-tcx-infinity-3-gore-tex-noir',
+    'sac-arriere-etanch-givi',
+    'tcx-boots-r04d-air-baskets',
+    'tcx-ikasu-air-baskets-moto',
+    'dainese-nighthawk-d1-gore-tex',
+    'chaussures-moto-dainese-energica-d-wp-sport-noir-anthracite',
+    'givi-top-case-monolock-alpina-44l',
+    'givi-top-case-monolock-alpina-44l-black',
+    'agv-k1s-e2206-grazie-vale',
+    'tcx-r04d-wp-black-red',
+    'tcx-r04d-wp-black-white'
+  ];
+
+  const updateStmt = db.prepare("UPDATE products SET is_bestseller = 1, sold_count = ? WHERE slug = ?");
+  bestsellerSlugs.forEach((slug, idx) => {
+    const soldCount = 500 - idx;
+    updateStmt.run(soldCount, slug);
+  });
+  console.log('[DB] Migration: updated screenshot products to be best sellers.');
+} catch (error: any) {
+  console.error('[DB] Error running best sellers migration:', error);
+}
+
 export default db;
