@@ -7,6 +7,7 @@ import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.ts';
 import { adminOnly } from '../middleware/adminOnly.ts';
 import { slugify } from '../utils/slugify.ts';
 import { runWooCommerceImport } from '../db/importWooCommerce.ts';
+import { proxyImageUrl } from '../utils/imageProxy.ts';
 
 const router = Router();
 
@@ -114,9 +115,9 @@ router.get('/products', (req: Request, res: Response) => {
       const variants = db.prepare('SELECT * FROM product_variants WHERE product_id = ?').all(p.id) as any[];
       return {
         ...p,
-        primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
-        images,
-        variants
+        primary_image: proxyImageUrl(primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600'),
+        images: images.map(img => ({ ...img, url: proxyImageUrl(img.url) })),
+        variants: variants.map(v => ({ ...v, image_url: proxyImageUrl(v.image_url) }))
       };
     });
 
@@ -472,7 +473,10 @@ router.get('/orders/:id', (req: Request, res: Response) => {
 
     res.json({
       ...order,
-      items
+      items: items.map(item => ({
+        ...item,
+        primary_image: proxyImageUrl(item.primary_image)
+      }))
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

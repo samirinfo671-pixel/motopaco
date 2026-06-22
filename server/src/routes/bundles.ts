@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import db from '../db/database.ts';
+import { proxyImageUrl } from '../utils/imageProxy.ts';
 
 const router = Router();
 
@@ -21,7 +22,7 @@ router.get('/', (req, res) => {
         const primaryImage = db.prepare('SELECT url FROM product_images WHERE product_id = ? AND is_primary = 1').get(p.id) as { url: string } | undefined;
         return {
           ...p,
-          primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600'
+          primary_image: proxyImageUrl(primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600')
         };
       });
 
@@ -60,7 +61,7 @@ router.get('/for-product/:productId', (req, res) => {
         const primaryImage = db.prepare('SELECT url FROM product_images WHERE product_id = ? AND is_primary = 1').get(p.id) as { url: string } | undefined;
         return {
           ...p,
-          primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600'
+          primary_image: proxyImageUrl(primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600')
         };
       });
 

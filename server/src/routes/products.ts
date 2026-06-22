@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import db from '../db/database.ts';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.ts';
+import { proxyImageUrl } from '../utils/imageProxy.ts';
 
 const router = Router();
 
@@ -117,7 +118,7 @@ router.get('/', (req, res) => {
 
       return {
         ...p,
-        primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
+        primary_image: proxyImageUrl(primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600'),
         total_stock: p.is_out_of_stock === 1 ? 0 : (totalStock ? totalStock.stock || 0 : 0),
         rating: avgRating && avgRating.rating ? Math.round(avgRating.rating * 10) / 10 : 0,
         review_count: avgRating ? avgRating.count : 0
@@ -160,7 +161,7 @@ router.get('/featured', (req, res) => {
 
       return {
         ...p,
-        primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
+        primary_image: proxyImageUrl(primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600'),
         total_stock: p.is_out_of_stock === 1 ? 0 : (totalStock ? totalStock.stock || 0 : 0),
         rating: avgRating && avgRating.rating ? Math.round(avgRating.rating * 10) / 10 : 0,
         review_count: avgRating ? avgRating.count : 0
@@ -195,7 +196,7 @@ router.get('/new-arrivals', (req, res) => {
 
       return {
         ...p,
-        primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
+        primary_image: proxyImageUrl(primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600'),
         total_stock: p.is_out_of_stock === 1 ? 0 : (totalStock ? totalStock.stock || 0 : 0),
         rating: avgRating && avgRating.rating ? Math.round(avgRating.rating * 10) / 10 : 0,
         review_count: avgRating ? avgRating.count : 0
@@ -205,6 +206,52 @@ router.get('/new-arrivals', (req, res) => {
     res.json(enhanced);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// GET /api/products/image-proxy
+router.get('/image-proxy', async (req, res) => {
+  const { url } = req.query;
+
+  if (!url || typeof url !== 'string') {
+    return res.status(400).json({ message: "URL d'image manquante ou invalide." });
+  }
+
+  try {
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      return res.status(400).json({ message: "Seules les URLs HTTP/HTTPS sont autorisées." });
+    }
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://motopaco.ma/',
+      }
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({ message: `Erreur de chargement de l'image distante: ${response.statusText}` });
+    }
+
+    const contentType = response.headers.get('content-type');
+    const cacheControl = response.headers.get('cache-control');
+
+    if (contentType) {
+      res.setHeader('Content-Type', contentType);
+    }
+    if (cacheControl) {
+      res.setHeader('Cache-Control', cacheControl);
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=604800'); // Cache for 7 days
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    return res.send(buffer);
+  } catch (error: any) {
+    console.error('Image proxy error:', error);
+    return res.status(500).json({ message: `Erreur interne du proxy d'image: ${error.message}` });
   }
 });
 
@@ -249,9 +296,9 @@ router.get('/:slug', (req, res) => {
 
     res.json({
       ...product,
-      primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
-      images,
-      variants,
+      primary_image: proxyImageUrl(primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600'),
+      images: images.map(img => ({ ...img, url: proxyImageUrl(img.url) })),
+      variants: variants.map(v => ({ ...v, image_url: proxyImageUrl(v.image_url) })),
       rating: avgRating && avgRating.rating ? Math.round(avgRating.rating * 10) / 10 : 0,
       review_count: avgRating ? avgRating.count : 0
     });
