@@ -328,6 +328,7 @@ export async function runWooCommerceImport(
       const sku = p.sku || `${p.slug}-default`;
       const stock = p.manage_stock ? (p.stock_quantity || 0) : 15;
       const imgUrl = p.images && p.images.length > 0 ? p.images[0].src : null;
+      const simplePrice = parseFloat(p.price) || null;
 
       insertVariant.run(
         productId,
@@ -336,7 +337,8 @@ export async function runWooCommerceImport(
         sku,
         stock,
         imgUrl,
-        'Standard variant specification'
+        null,        // description
+        simplePrice  // price_override
       );
     }
 
