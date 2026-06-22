@@ -2,23 +2,27 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy server package files
+COPY server/package*.json ./
 RUN npm ci
 
-COPY tsconfig.json ./
-COPY src/ ./src/
+# Copy server source
+COPY server/tsconfig.json ./
+COPY server/src/ ./src/
 
+# Build with esbuild
 RUN npm run build
 
+# ---- Production Stage ----
 FROM node:20-slim
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY server/package*.json ./
 RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
-COPY src/db/schema.sql ./src/db/schema.sql
+COPY server/src/db/schema.sql ./src/db/schema.sql
 
 ENV PORT=5005
 ENV NODE_ENV=production
