@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://api.motopaco.com/api/$1" },
-    { "source": "/uploads/(.*)", "destination": "https://api.motopaco.com/uploads/$1" },
+    { "source": "/api/(.*)", "destination": "https://motopaco-production.up.railway.app/api/$1" },
+    { "source": "/uploads/(.*)", "destination": "https://motopaco-production.up.railway.app/uploads/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
