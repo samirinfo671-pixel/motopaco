@@ -13,6 +13,7 @@ if (!fs.existsSync(dbDir)) {
 }
 
 const db = new Database(dbPath);
+console.log('[DB] Connected to SQLite database at:', dbPath);
 
 // Enable foreign key support
 db.pragma('foreign_keys = ON');

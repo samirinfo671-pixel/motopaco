@@ -1,7 +1,10 @@
+import dotenv from 'dotenv';
+// Load environment variables
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import dotenv from 'dotenv';
 import { seedDatabase } from './db/seed.ts';
 import authRouter from './routes/auth.ts';
 import productsRouter from './routes/products.ts';
@@ -14,8 +17,6 @@ import adminRouter from './routes/admin.ts';
 import settingsRouter from './routes/settings.ts';
 import { errorHandler } from './middleware/errorHandler.ts';
 
-// Load environment variables
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5005;
