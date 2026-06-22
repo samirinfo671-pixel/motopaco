@@ -159,6 +159,67 @@ try {
     } catch (e) {
       console.error('[DB] SEO settings migration failed:', e);
     }
+    
+    // Ensure default instagram posts exist in settings
+    try {
+      const hasInsta = db.prepare("SELECT COUNT(*) as count FROM site_settings WHERE key = 'instagram_posts'").get() as { count: number };
+      if (!hasInsta || hasInsta.count === 0) {
+        const defaultPosts = [
+          {
+            id: "1",
+            imageUrl: "/uploads/instagram-1.png",
+            link: "https://www.instagram.com/p/C7X-MOTO1/",
+            caption: "Le casque AGV K6 S Carbon, ultra léger et résistant. Parfait pour vos sorties sportives et roadtrips au Maroc ! 🏍️🇲🇦 #AGV #AGVK6S #MotoPaco #Rabat #Casablanca #Temara",
+            likes: 248,
+            comments: 19
+          },
+          {
+            id: "2",
+            imageUrl: "/uploads/instagram-2.png",
+            link: "https://www.instagram.com/p/C7X-MOTO2/",
+            caption: "Style et sécurité avec le blouson cuir Dainese Racing 4. Venez l'essayer dans notre showroom ! 🏍️✨ #Dainese #DaineseCrew #MotoPaco #EquipementMotard",
+            likes: 194,
+            comments: 12
+          },
+          {
+            id: "3",
+            imageUrl: "/uploads/instagram-3.png",
+            link: "https://www.instagram.com/p/C7X-MOTO3/",
+            caption: "Notre showroom est prêt pour vous accueillir avec les meilleures marques d'équipement motard au Maroc ! 🏪🏍️ #MotoPaco #SharkHelmets #Shoei #AGV #Alpinestars #Givi",
+            likes: 312,
+            comments: 28
+          },
+          {
+            id: "4",
+            imageUrl: "/uploads/instagram-4.png",
+            link: "https://www.instagram.com/p/C7X-MOTO4/",
+            caption: "Rien ne vaut une virée dans les routes de l'Atlas marocain. Équipez-vous pour l'aventure ! 🏔️🏍️ #AtlasMorocco #Roadtrip #Yamaha #Tenere #MotoPaco",
+            likes: 420,
+            comments: 35
+          },
+          {
+            id: "5",
+            imageUrl: "/uploads/instagram-5.png",
+            link: "https://www.instagram.com/p/C7X-MOTO5/",
+            caption: "Libérez la puissance et le son de votre machine avec les lignes d'échappement complètes Akrapovič. 🔊🔥 #Akrapovic #Tmax560 #AkrapovicSound #MotoPaco",
+            likes: 287,
+            comments: 22
+          },
+          {
+            id: "6",
+            imageUrl: "/uploads/instagram-6.png",
+            link: "https://www.instagram.com/p/C7X-MOTO6/",
+            caption: "Les bottes TCX RT-Race et les gants Dainese Carbon : le combo idéal pour la piste et la route. 🏁🧤 #TCXBoots #Dainese #RacingGear #MotoPaco",
+            likes: 165,
+            comments: 8
+          }
+        ];
+        db.prepare("INSERT INTO site_settings (key, value) VALUES ('instagram_posts', ?)").run(JSON.stringify(defaultPosts));
+        console.log('[DB] Seeded default instagram_posts settings.');
+      }
+    } catch (instaErr) {
+      console.error('[DB] Failed to seed default instagram_posts:', instaErr);
+    }
   }
 } catch (error) {
   console.error('[DB] Error seeding site settings:', error);

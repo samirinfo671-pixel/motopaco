@@ -3,6 +3,15 @@ import { Save, Image as ImageIcon, Loader2, CheckCircle } from 'lucide-react';
 import api from '../../lib/api.ts';
 import AdminLayout from '../../components/admin/AdminLayout.tsx';
 
+interface InstagramPost {
+  id: string;
+  imageUrl: string;
+  link: string;
+  caption: string;
+  likes: number;
+  comments: number;
+}
+
 export const AdminSettings: React.FC = () => {
   const [settings, setSettings] = useState<Record<string, string>>({
     hero_desktop_image: '',
@@ -11,6 +20,7 @@ export const AdminSettings: React.FC = () => {
     home_featured_limit: '8',
     home_new_arrivals_limit: '8'
   });
+  const [instagramPosts, setInstagramPosts] = useState<InstagramPost[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const fileInputDesktopRef = useRef<HTMLInputElement>(null);
@@ -19,6 +29,17 @@ export const AdminSettings: React.FC = () => {
   useEffect(() => {
     fetchSettings();
   }, []);
+
+  // Sync instagramPosts when settings loads
+  useEffect(() => {
+    if (settings.instagram_posts) {
+      try {
+        setInstagramPosts(JSON.parse(settings.instagram_posts));
+      } catch (e) {
+        console.error("Failed to parse instagram posts settings", e);
+      }
+    }
+  }, [settings.instagram_posts]);
 
   const fetchSettings = async () => {
     try {
@@ -32,11 +53,62 @@ export const AdminSettings: React.FC = () => {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      await api.put('/admin/settings', settings);
+      const updatedSettings = {
+        ...settings,
+        instagram_posts: JSON.stringify(instagramPosts)
+      };
+      await api.put('/admin/settings', updatedSettings);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (error) {
       console.error('Failed to save settings', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddPost = () => {
+    const newPost: InstagramPost = {
+      id: Date.now().toString(),
+      imageUrl: '',
+      link: 'https://www.instagram.com/moto__paco/',
+      caption: '',
+      likes: 0,
+      comments: 0
+    };
+    setInstagramPosts([...instagramPosts, newPost]);
+  };
+
+  const handleDeletePost = (index: number) => {
+    setInstagramPosts(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handlePostChange = (index: number, field: keyof InstagramPost, value: any) => {
+    setInstagramPosts(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const handlePostImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setIsLoading(true);
+    try {
+      const res = await api.post('/admin/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setInstagramPosts(prev => {
+        const updated = [...prev];
+        updated[index] = { ...updated[index], imageUrl: res.data.url };
+        return updated;
+      });
+    } catch (error) {
+      console.error('Failed to upload post image', error);
     } finally {
       setIsLoading(false);
     }
@@ -244,6 +316,112 @@ export const AdminSettings: React.FC = () => {
               className="w-full bg-black border border-gray-700 rounded-lg px-5 py-4 focus:ring-0 focus:outline-none focus:border-[#E63012] text-white font-mono"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Instagram Showcase */}
+      <div className="bg-[#111827]/80 backdrop-blur-xl border border-gray-800 rounded-2xl p-8 shadow-2xl">
+        <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-800">
+          <h2 className="font-display font-black text-lg uppercase tracking-widest text-white flex items-center gap-3">
+            <span className="w-1.5 h-6 bg-[#E63012] rounded-full inline-block"></span>
+            Instagram Showcase
+          </h2>
+          <button
+            type="button"
+            onClick={handleAddPost}
+            className="bg-[#E63012] hover:bg-white hover:text-black text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg transition-all"
+          >
+            + AJOUTER UN POST
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {instagramPosts.map((post, index) => (
+            <div key={post.id} className="bg-black/60 border border-gray-800 rounded-xl p-5 space-y-4 relative group">
+              <button
+                type="button"
+                onClick={() => handleDeletePost(index)}
+                className="absolute top-3 right-3 bg-red-950 text-red-500 hover:bg-red-500 hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition-all"
+              >
+                Supprimer
+              </button>
+
+              <div className="flex gap-4">
+                {/* Thumbnail upload area */}
+                <div 
+                  className="w-24 h-24 bg-gray-900 border border-gray-700 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-[#E63012] overflow-hidden shrink-0 relative"
+                  onClick={() => {
+                    const el = document.getElementById(`post-img-input-${index}`);
+                    el?.click();
+                  }}
+                >
+                  {post.imageUrl ? (
+                    <img src={post.imageUrl} alt="Insta preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-center p-2 text-gray-500">
+                      <span className="text-lg">📷</span>
+                      <p className="text-[8px] font-bold uppercase mt-1">Image</p>
+                    </div>
+                  )}
+                  <input
+                    id={`post-img-input-${index}`}
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => handlePostImageUpload(e, index)}
+                  />
+                </div>
+
+                <div className="flex-1 space-y-2">
+                  <div>
+                    <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Likes</label>
+                    <input
+                      type="number"
+                      value={post.likes}
+                      onChange={(e) => handlePostChange(index, 'likes', parseInt(e.target.value) || 0)}
+                      className="w-full bg-black/40 border border-gray-700 rounded px-2 py-1 text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Comments</label>
+                    <input
+                      type="number"
+                      value={post.comments}
+                      onChange={(e) => handlePostChange(index, 'comments', parseInt(e.target.value) || 0)}
+                      className="w-full bg-black/40 border border-gray-700 rounded px-2 py-1 text-xs text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Lien Instagram</label>
+                <input
+                  type="text"
+                  value={post.link}
+                  onChange={(e) => handlePostChange(index, 'link', e.target.value)}
+                  placeholder="https://instagram.com/p/..."
+                  className="w-full bg-black/40 border border-gray-700 rounded px-3 py-2 text-xs text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Légende (Caption)</label>
+                <textarea
+                  value={post.caption}
+                  onChange={(e) => handlePostChange(index, 'caption', e.target.value)}
+                  placeholder="Ex: Le nouveau casque AGV..."
+                  rows={3}
+                  className="w-full bg-black/40 border border-gray-700 rounded px-3 py-2 text-xs text-white resize-none"
+                />
+              </div>
+            </div>
+          ))}
+          {instagramPosts.length === 0 && (
+            <div className="col-span-full py-12 text-center text-gray-500 border border-dashed border-gray-800 rounded-xl">
+              Aucun post configuré. Cliquez sur "+ AJOUTER UN POST" ci-dessus.
+            </div>
+          )}
         </div>
       </div>
 

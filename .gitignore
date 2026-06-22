@@ -27,3 +27,4 @@ data.db
 # Uploads directory contents (ignore actual uploaded files, keep directory structure)
 server/uploads/*
 !server/uploads/.gitkeep
+!server/uploads/instagram-*.png

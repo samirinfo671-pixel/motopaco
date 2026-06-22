@@ -8,6 +8,7 @@ import api from '../lib/api.ts';
 import { Product } from '../types/product.ts';
 import ProductCard from '../components/product/ProductCard.tsx';
 import SEOHead from '../components/seo/SEOHead.tsx';
+import InstagramFeed from '../components/layout/InstagramFeed.tsx';
 
 /* ─── Category inline SVGs ───────────────────────────────────── */
 const categoryIcons = {
@@ -668,6 +669,9 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* ===== INSTAGRAM SHOWCASE SECTION ===== */}
+      <InstagramFeed />
 
       {/* ===== FAQ SECTION ===== */}
       <section className="py-10 bg-[#f8f9fa] border-b border-gray-200">
