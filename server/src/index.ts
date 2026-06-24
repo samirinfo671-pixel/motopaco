@@ -6,6 +6,8 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { seedDatabase } from './db/seed.ts';
+import { cleanupDemoData } from './db/cleanupDemoData.ts';
+import { organizeCatalog } from './db/organizeCatalog.ts';
 import authRouter from './routes/auth.ts';
 import productsRouter from './routes/products.ts';
 import categoriesRouter from './routes/categories.ts';
@@ -54,8 +56,10 @@ app.use('/uploads', express.static(uploadsDir));
 // Seed the database on boot
 try {
   seedDatabase();
+  cleanupDemoData();
+  organizeCatalog();
 } catch (error) {
-  console.error('Seeding during server startup failed:', error);
+  console.error('Seeding, cleanup or catalog organization failed:', error);
 }
 
 // Register API Routes
