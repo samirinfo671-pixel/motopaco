@@ -29,7 +29,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   description,
   keywords,
   url = typeof window !== 'undefined' ? window.location.href : 'https://motopaco.com',
-  image = 'https://picsum.photos/seed/packmoto-og/1200/630',
+  image = 'https://motopaco.ma/wp-content/uploads/2025/11/image.webp',
   type = 'website',
   schema
 }) => {

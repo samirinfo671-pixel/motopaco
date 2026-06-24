@@ -73,29 +73,28 @@ export const CartDrawer: React.FC = () => {
   const getUpsellProduct = () => {
     const slugs = items.map(i => i.product.slug);
     
-    // Check if they have the AGV K6 helmet but not the Dainese gloves
-    const hasK6 = slugs.find(s => s.startsWith('casque-agv-k6'));
-    const hasGants = slugs.find(s => s.startsWith('gants-dainese-carbon-4'));
-    if (hasK6 && !hasGants) {
+    // Check if they have a helmet (AGV, Shark, Nolan, etc.) but not gloves
+    const hasHelmet = slugs.find(s => s.includes('casque') || s.includes('helmet') || s.includes('agv') || s.includes('shark') || s.includes('nolan'));
+    const hasGloves = slugs.find(s => s.includes('gant') || s.includes('glove'));
+    if (hasHelmet && !hasGloves) {
       return {
-        triggerSlug: hasK6,
-        targetSlug: 'gants-dainese-carbon-4-long-maroc',
-        name: 'Gants Dainese Carbon 4 Long',
-        image: 'https://picsum.photos/seed/gants-dainese-carbon-4-long-maroc/100/100',
-        message: '🔥 Pack Sécurité Route: Ajoutez les gants Dainese Carbon 4 et économisez 10% sur le pack !'
+        triggerSlug: hasHelmet,
+        targetSlug: 'gants-alpinestars-sp-8-v3',
+        name: 'Gants Alpinestars SP-8 V3',
+        image: 'https://motopaco.ma/wp-content/uploads/2025/05/none_7b0ed841f12537bd93843c10f31f1f78_7b0ed84.jpeg',
+        message: '🔥 Pack Sécurité Route: Ajoutez les gants Alpinestars SP-8 V3 et économisez 10% sur le pack !'
       };
     }
 
-    // Check if they have the Shark helmet but not SMX-6 Boots
-    const hasShark = slugs.find(s => s.startsWith('casque-shark-spartan'));
-    const hasBoots = slugs.find(s => s.startsWith('bottes-alpinestars-smx-6'));
-    if (hasShark && !hasBoots) {
+    // Check if they have a helmet but not boots/shoes
+    const hasBoots = slugs.find(s => s.includes('botte') || s.includes('boot') || s.includes('chaussure') || s.includes('shoes'));
+    if (hasHelmet && !hasBoots) {
       return {
-        triggerSlug: hasShark,
-        targetSlug: 'bottes-alpinestars-smx-6-v2-maroc',
-        name: 'Bottes Alpinestars SMX-6 v2',
-        image: 'https://picsum.photos/seed/bottes-alpinestars-smx-6-v2-maroc/100/100',
-        message: '🏁 Pack Aventure: Complétez votre équipement avec les bottes SMX-6 v2 pour économiser 15% !'
+        triggerSlug: hasHelmet,
+        targetSlug: 'dainese-energyca-air-bottes-black-anthracite',
+        name: 'Bottes Dainese Energyca Air',
+        image: 'https://motopaco.ma/wp-content/uploads/2025/10/Image-31-12-2025-at-15.24.png',
+        message: '🏁 Pack Aventure: Complétez votre équipement avec les bottes Dainese Energyca Air pour économiser 15% !'
       };
     }
 

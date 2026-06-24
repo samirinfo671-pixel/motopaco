@@ -126,58 +126,53 @@ export const useCartStore = create<CartState>()(
           return Math.min(...qtys);
         };
 
-        // Bundle 1: Pack Sécurité Route (Casque AGV K6 + Gants Dainese Carbon 4) => 10% Off
-        const b1Slugs = ['casque-agv-k6-s-noir-mat-maroc-maroc', 'casque-agv-k6-s-noir-mat-maroc', 'gants-dainese-carbon-4-long-maroc-maroc', 'gants-dainese-carbon-4-long-maroc'];
-        // Let's normalize slugs since they might end with -maroc or not
+        // Bundle 1: Pack Sécurité Route (Casque AGV + Gants Dainese/Alpinestars) => 10% Off
         const actualSlugsInCart = items.map(i => i.product.slug);
         
-        const hasK6 = actualSlugsInCart.find(s => s.startsWith('casque-agv-k6'));
-        const hasGants = actualSlugsInCart.find(s => s.startsWith('gants-dainese-carbon-4'));
+        const hasAGV = actualSlugsInCart.find(s => s.includes('agv'));
+        const hasGants = actualSlugsInCart.find(s => (s.includes('gant') || s.includes('glove')) && (s.includes('dainese') || s.includes('alpinestars')));
 
-        if (hasK6 && hasGants) {
-          const k6Qty = items.find(i => i.product.slug === hasK6)?.quantity || 0;
+        if (hasAGV && hasGants) {
+          const agvQty = items.find(i => i.product.slug === hasAGV)?.quantity || 0;
           const gantsQty = items.find(i => i.product.slug === hasGants)?.quantity || 0;
-          const b1Match = Math.min(k6Qty, gantsQty);
+          const b1Match = Math.min(agvQty, gantsQty);
           
           if (b1Match > 0) {
-            const k6Price = findItemPrice(hasK6);
+            const agvPrice = findItemPrice(hasAGV);
             const gantsPrice = findItemPrice(hasGants);
-            discount += (k6Price + gantsPrice) * b1Match * 0.10;
+            discount += (agvPrice + gantsPrice) * b1Match * 0.10;
           }
         }
 
-        // Bundle 2: Pack Aventure (Shark Spartan GT + Alpinestars SMX-6 Boots + Dainese Delta 4 Pants) => 15% Off
-        const hasShark = actualSlugsInCart.find(s => s.startsWith('casque-shark-spartan'));
-        const hasBoots = actualSlugsInCart.find(s => s.startsWith('bottes-alpinestars-smx-6'));
-        const hasPants = actualSlugsInCart.find(s => s.startsWith('pantalon-cuir-dainese-delta'));
+        // Bundle 2: Pack Aventure (Casque Shark + Bottes Dainese/TCX) => 15% Off
+        const hasShark = actualSlugsInCart.find(s => s.includes('shark'));
+        const hasBoots = actualSlugsInCart.find(s => s.includes('botte') || s.includes('boot') || s.includes('chaussure') || s.includes('shoes'));
 
-        if (hasShark && hasBoots && hasPants) {
+        if (hasShark && hasBoots) {
           const sharkQty = items.find(i => i.product.slug === hasShark)?.quantity || 0;
           const bootsQty = items.find(i => i.product.slug === hasBoots)?.quantity || 0;
-          const pantsQty = items.find(i => i.product.slug === hasPants)?.quantity || 0;
-          const b2Match = Math.min(sharkQty, bootsQty, pantsQty);
+          const b2Match = Math.min(sharkQty, bootsQty);
 
           if (b2Match > 0) {
             const sharkPrice = findItemPrice(hasShark);
             const bootsPrice = findItemPrice(hasBoots);
-            const pantsPrice = findItemPrice(hasPants);
-            discount += (sharkPrice + bootsPrice + pantsPrice) * b2Match * 0.15;
+            discount += (sharkPrice + bootsPrice) * b2Match * 0.15;
           }
         }
 
-        // Bundle 3: Pack Chaîne Complete (DID 525 VX3 + USB charger) => 12% Off
-        const hasChain = actualSlugsInCart.find(s => s.startsWith('kit-chaine-did-525'));
-        const hasUSB = actualSlugsInCart.find(s => s.startsWith('double-prise-usb'));
+        // Bundle 3: Pack Smartphone Connecté (Support Smartphone / Quad Lock + USB charger) => 12% Off
+        const hasSupport = actualSlugsInCart.find(s => s.includes('support-smartphone') || s.includes('support-telephone') || s.includes('quad-lock') || s.includes('support-pour-telephone-portable'));
+        const hasUSB = actualSlugsInCart.find(s => s.includes('usb') || s.includes('chargeur') || s.includes('prise-electrique'));
 
-        if (hasChain && hasUSB) {
-          const chainQty = items.find(i => i.product.slug === hasChain)?.quantity || 0;
+        if (hasSupport && hasUSB) {
+          const supportQty = items.find(i => i.product.slug === hasSupport)?.quantity || 0;
           const usbQty = items.find(i => i.product.slug === hasUSB)?.quantity || 0;
-          const b3Match = Math.min(chainQty, usbQty);
+          const b3Match = Math.min(supportQty, usbQty);
 
           if (b3Match > 0) {
-            const chainPrice = findItemPrice(hasChain);
+            const supportPrice = findItemPrice(hasSupport);
             const usbPrice = findItemPrice(hasUSB);
-            discount += (chainPrice + usbPrice) * b3Match * 0.12;
+            discount += (supportPrice + usbPrice) * b3Match * 0.12;
           }
         }
 
