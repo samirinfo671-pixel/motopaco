@@ -85,7 +85,7 @@ export const Footer: React.FC = () => {
               
               <div className="flex items-center gap-3">
                 <a
-                  href="https://facebook.com/packmoto"
+                  href="https://facebook.com/motopaco"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full bg-[#3b5998] hover:opacity-90 flex items-center justify-center text-white transition-opacity"
@@ -94,7 +94,7 @@ export const Footer: React.FC = () => {
                   <Facebook className="w-4 h-4 fill-white" />
                 </a>
                 <a
-                  href="https://instagram.com/packmoto"
+                  href="https://instagram.com/motopaco"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full bg-[#3f729b] hover:opacity-90 flex items-center justify-center text-white transition-opacity"
@@ -103,7 +103,7 @@ export const Footer: React.FC = () => {
                   <Instagram className="w-4 h-4" />
                 </a>
                 <a
-                  href="https://youtube.com/packmoto"
+                  href="https://youtube.com/motopaco"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full bg-[#ff0000] hover:opacity-90 flex items-center justify-center text-white transition-opacity"
@@ -112,7 +112,7 @@ export const Footer: React.FC = () => {
                   <Youtube className="w-4 h-4 fill-white" />
                 </a>
                 <a
-                  href="https://linkedin.com/company/packmoto"
+                  href="https://linkedin.com/company/motopaco"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-full bg-[#0077b5] hover:opacity-90 flex items-center justify-center text-white transition-opacity"

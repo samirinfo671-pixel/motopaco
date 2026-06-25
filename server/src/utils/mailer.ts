@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 const isSMTPConfigured = !!(process.env.SMTP_USER && process.env.SMTP_PASS);
 
 export async function sendOrderEmails(order: any, items: any[]) {
-  const adminEmail = process.env.ADMIN_EMAIL || 'contact@packmoto.ma';
+  const adminEmail = process.env.ADMIN_EMAIL || 'contact@motopaco.com';
 
   // 1. Build Email Contents
   const orderNumber = order.order_number;

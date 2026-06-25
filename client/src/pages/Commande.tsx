@@ -107,9 +107,15 @@ export const Commande: React.FC = () => {
       return;
     }
 
-    // Phone format check: Moroccan standard 06/07 or +212
-    const phoneRegex = /^(?:\+212|0)[67]\d{8}$/;
-    if (!phoneRegex.test(phone.trim().replace(/\s+/g, ''))) {
+    // Normalize phone number: strip spaces, hyphens, parentheses, and plus sign
+    const cleanedPhone = phone.trim().replace(/[\s\-\(\)\+]+/g, '');
+
+    // Permissive check for Moroccan numbers:
+    // - starting with 0 followed by 5, 6, 7, 8 and 8 digits (10 digits total)
+    // - starting with 212 followed by 5, 6, 7, 8 and 8 digits (11 digits total)
+    // - starting with 00212 followed by 5, 6, 7, 8 and 8 digits (13 digits total)
+    const phoneRegex = /^(?:0|212|00212)[5678]\d{8}$/;
+    if (!phoneRegex.test(cleanedPhone)) {
       setValidationError('Numéro de téléphone invalide. Utilisez un format marocain (ex: 0612345678 ou +212612345678).');
       return;
     }
@@ -123,7 +129,7 @@ export const Commande: React.FC = () => {
         user_id: user?.id || null,
         shipping_first_name: firstName.trim(),
         shipping_last_name: lastName.trim(),
-        shipping_phone: phone.trim().replace(/\s+/g, ''),
+        shipping_phone: cleanedPhone,
         shipping_email: email.trim(),
         shipping_address: address.trim(),
         shipping_city: city,

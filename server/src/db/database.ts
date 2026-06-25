@@ -136,13 +136,14 @@ try {
     insertSetting.run('whatsapp_number', '212667389916');
     insertSetting.run('seo_title', 'MOTO PACO | Équipement Motard Maroc & Accessoires Moto');
     insertSetting.run('seo_description', 'MOTO PACO : Le spécialiste d\'équipement motard original au Maroc. Casques, gants, vestes et accessoires Givi, Alpinestars, AGV, TCX, Akrapovič aux meilleurs prix.');
-    insertSetting.run('contact_email', 'contact@packmoto.ma');
+    insertSetting.run('contact_email', 'contact@motopaco.com');
     insertSetting.run('store_address', 'Lotissement assaada n92, Ain atiq 12000');
     console.log('[DB] Seeded default site settings.');
   } else {
     // Force set the whatsapp number to the newly requested +212667389916
     db.prepare('INSERT INTO site_settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value').run('whatsapp_number', '212667389916');
-    console.log('[DB] Updated whatsapp_number to +212667389916 in database settings.');
+    db.prepare('INSERT INTO site_settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value').run('contact_email', 'contact@motopaco.com');
+    console.log('[DB] Updated settings to +212667389916 and contact@motopaco.com in database settings.');
 
     // Migrate existing SEO titles/descriptions if they are the old defaults
     try {

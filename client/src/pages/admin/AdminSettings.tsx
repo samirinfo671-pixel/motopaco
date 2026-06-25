@@ -273,7 +273,7 @@ export const AdminSettings: React.FC = () => {
               type="email"
               value={settings.contact_email || ''}
               onChange={(e) => setSettings({ ...settings, contact_email: e.target.value })}
-              placeholder="contact@packmoto.ma"
+              placeholder="contact@motopaco.com"
               className="w-full bg-black border border-gray-700 rounded-lg px-5 py-4 focus:ring-0 focus:outline-none focus:border-[#E63012] text-white font-mono"
             />
           </div>

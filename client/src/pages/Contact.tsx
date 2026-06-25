@@ -13,7 +13,7 @@ export const Contact: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const waNumber = settings.whatsapp_number || '212600112233';
-  const contactEmail = settings.contact_email || 'support@packmoto.ma';
+  const contactEmail = settings.contact_email || 'support@motopaco.com';
   const storeAddress = settings.store_address || 'Moto paco, Lotissement assaada n92 et ain atiq temara, Ain atiq 12000';
 
   const handleSubmit = (e: React.FormEvent) => {

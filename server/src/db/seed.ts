@@ -66,8 +66,8 @@ export function seedDatabase() {
     // 1. Create Admin & Customer User
     const adminHash = bcrypt.hashSync('admin123', 10);
     const customerHash = bcrypt.hashSync('customer123', 10);
-    insertUser.run('admin@packmoto.ma', adminHash, 'Pack', 'Moto', '+212600112233', 'admin');
-    insertUser.run('client@packmoto.ma', customerHash, 'Samir', 'Alami', '+212644556677', 'customer');
+    insertUser.run('admin@motopaco.com', adminHash, 'Pack', 'Moto', '+212600112233', 'admin');
+    insertUser.run('client@motopaco.com', customerHash, 'Samir', 'Alami', '+212644556677', 'customer');
     // 2. Parent Categories
     const catPiloteId = insertCategory.run('Équipement Pilote', 'equipement-pilote', null, 'https://picsum.photos/seed/pilote/600/400', 'Équipement Motard Maroc | Moto Paco', 'Achetez vos casques, gants et vestes de moto au meilleur prix au Maroc.', 1, 0).lastInsertRowid as number;
     const catPiecesId = insertCategory.run('Pièces & Accessoires', 'pieces-accessoires', null, 'https://picsum.photos/seed/pieces/600/400', 'Pièces Moto et Accessoires Maroc', 'Toutes les pièces détachées, kits chaîne et échappements pour votre moto.', 2, 0).lastInsertRowid as number;

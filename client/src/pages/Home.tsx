@@ -138,6 +138,56 @@ export const Home: React.FC = () => {
     { name: 'Ilias H.', city: 'Meknès', text: "Casque modulable Shark Evo-One 2 reçu bien emballé avec une housse de transport. Le produit est identique aux photos. 5 étoiles mérité, la meilleure boutique moto en ligne au Maroc !", rating: 5 },
   ];  const [showAllReviews, setShowAllReviews] = useState(false);
 
+  // Load and configure YouTube player for hero background video to handle mobile autoplay restrictions
+  useEffect(() => {
+    // 1. Define global callback
+    (window as any).onYouTubeIframeAPIReady = () => {
+      initPlayer();
+    };
+
+    // 2. Load API script if not loaded
+    if (!(window as any).YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    } else {
+      initPlayer();
+    }
+
+    let player: any;
+    function initPlayer() {
+      try {
+        player = new (window as any).YT.Player('hero-youtube-video', {
+          events: {
+            onReady: (event: any) => {
+              event.target.mute();
+              event.target.playVideo();
+            },
+            onStateChange: (event: any) => {
+              // State 1 represents YT.PlayerState.PLAYING
+              if (event.data === 1) {
+                setIsVideoLoaded(true);
+              }
+            }
+          }
+        });
+      } catch (err) {
+        console.error('YouTube player init failed:', err);
+      }
+    }
+
+    return () => {
+      if (player && typeof player.destroy === 'function') {
+        try {
+          player.destroy();
+        } catch (e) {
+          // ignore
+        }
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const loadProducts = async () => {
       try {
@@ -238,8 +288,8 @@ export const Home: React.FC = () => {
           "@context": "https://schema.org",
           "@type": "Organization",
           "name": "MOTO PACO",
-          "url": "https://packmoto.com",
-          "sameAs": ["https://instagram.com/packmoto", "https://facebook.com/packmoto"]
+          "url": "https://motopaco.com",
+          "sameAs": ["https://instagram.com/motopaco", "https://facebook.com/motopaco"]
         }}
       />
 
@@ -253,12 +303,12 @@ export const Home: React.FC = () => {
             style={{ backgroundImage: 'url(/video-thumbnail.jpg)' }}
           />
           <iframe
+            id="hero-youtube-video"
             src="https://www.youtube.com/embed/9SBy1sAlAhs?autoplay=1&mute=1&loop=1&playlist=9SBy1sAlAhs&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&vq=hd1080"
             className={`absolute top-1/2 left-1/2 w-[177.78vh] h-[56.25vw] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
-            allow="autoplay; encrypted-media"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             title="Moto Paco Promo Video"
             frameBorder="0"
-            onLoad={() => setIsVideoLoaded(true)}
           />
         </div>
         

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, ShoppingCart, ChevronDown, ChevronRight, Loader2, X, Menu, User, Phone } from 'lucide-react';
+import { Search, ShoppingCart, ChevronDown, ChevronRight, Loader2, X, Menu, User, Phone, HelpCircle } from 'lucide-react';
 import { useCartStore } from '../../store/cart.ts';
 import { useAuthStore } from '../../store/auth.ts';
 import { useUIStore } from '../../store/ui.ts';
@@ -120,11 +120,11 @@ const megaMenuData = [
 
 /* ─── Helper Icons ───────────────────────────────────────────── */
 const HelpIcon = () => (
-  <img src="https://packmoto.com/img/cms/Aide-Motomax.svg" alt="Aide" className="w-8 h-8" />
+  <HelpCircle className="w-[30px] h-[30px]" />
 );
 
 const HelmetIcon = () => (
-  <img src="https://packmoto.com/img/cms/PackMoto-ICONES-HEADER-MonCompte.svg" alt="Mon Compte" className="w-8 h-8" />
+  <User className="w-[30px] h-[30px]" />
 );
 
 /* ─── Custom megamenu images ─────────────────────────────────── */
