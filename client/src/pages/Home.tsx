@@ -140,6 +140,11 @@ export const Home: React.FC = () => {
 
   // Load and configure YouTube player for hero background video to handle mobile autoplay restrictions
   useEffect(() => {
+    // Fallback timeout to ensure the video becomes visible even if the YouTube API fails or is blocked
+    const fallbackTimeout = setTimeout(() => {
+      setIsVideoLoaded(true);
+    }, 1500);
+
     // 1. Define global callback
     (window as any).onYouTubeIframeAPIReady = () => {
       initPlayer();
@@ -178,6 +183,7 @@ export const Home: React.FC = () => {
     }
 
     return () => {
+      clearTimeout(fallbackTimeout);
       if (player && typeof player.destroy === 'function') {
         try {
           player.destroy();
