@@ -162,6 +162,18 @@ router.post('/', (req, res) => {
           item.unit_price,
           item.line_total
         );
+
+        // Update sold_count in products table for metrics-based best sellers
+        db.prepare('UPDATE products SET sold_count = sold_count + ? WHERE id = ?').run(
+          item.quantity,
+          item.product_id
+        );
+
+        // Decrement variant stock
+        db.prepare('UPDATE product_variants SET stock = MAX(0, stock - ?) WHERE id = ?').run(
+          item.quantity,
+          item.variant_id
+        );
       }
 
       return {

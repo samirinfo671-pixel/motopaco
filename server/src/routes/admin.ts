@@ -7,6 +7,8 @@ import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.ts';
 import { adminOnly } from '../middleware/adminOnly.ts';
 import { slugify } from '../utils/slugify.ts';
 import { runWooCommerceImport } from '../db/importWooCommerce.ts';
+import { organizeCatalog } from '../db/organizeCatalog.ts';
+import { setupBestSellers } from '../db/setupBestSellers.ts';
 
 const router = Router();
 
@@ -857,6 +859,13 @@ router.post('/woocommerce-import/sync', (req: Request, res: Response) => {
       db.prepare("INSERT INTO site_settings (key, value) VALUES ('woocommerce_sync_status', 'success') ON CONFLICT(key) DO UPDATE SET value = excluded.value").run();
       
       logMessage(`Importation réussie : ${result.importedCount} produits synchronisés.`);
+      
+      // Re-organize catalog and re-flag best sellers on the newly imported live data
+      logMessage("Reclassement automatique des catégories et marques...");
+      organizeCatalog();
+      logMessage("Initialisation des meilleures ventes et métriques...");
+      setupBestSellers();
+      logMessage("Synchronisation finale terminée avec succès !");
     } catch (err: any) {
       console.error('WooCommerce sync error:', err);
       const errMsg = err.message || 'Une erreur inconnue est survenue';

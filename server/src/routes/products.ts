@@ -149,7 +149,7 @@ router.get('/featured', (req, res) => {
       FROM products p
       LEFT JOIN brands b ON p.brand_id = b.id
       WHERE p.status = 'published'
-      ORDER BY p.is_bestseller DESC, p.sold_count DESC
+      ORDER BY p.sold_count DESC
       LIMIT ?
     `).all(limit) as any[];
 
@@ -184,7 +184,7 @@ router.get('/new-arrivals', (req, res) => {
       FROM products p
       LEFT JOIN brands b ON p.brand_id = b.id
       WHERE p.status = 'published'
-      ORDER BY p.is_featured DESC, p.created_at DESC
+      ORDER BY p.created_at DESC
       LIMIT ?
     `).all(limit) as any[];
 

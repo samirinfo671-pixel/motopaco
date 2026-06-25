@@ -8,6 +8,7 @@ import path from 'path';
 import { seedDatabase } from './db/seed.ts';
 import { cleanupDemoData } from './db/cleanupDemoData.ts';
 import { organizeCatalog } from './db/organizeCatalog.ts';
+import { setupBestSellers } from './db/setupBestSellers.ts';
 import authRouter from './routes/auth.ts';
 import productsRouter from './routes/products.ts';
 import categoriesRouter from './routes/categories.ts';
@@ -58,8 +59,9 @@ try {
   seedDatabase();
   cleanupDemoData();
   organizeCatalog();
+  setupBestSellers();
 } catch (error) {
-  console.error('Seeding, cleanup or catalog organization failed:', error);
+  console.error('Seeding, cleanup, catalog organization or bestseller setup failed:', error);
 }
 
 // Register API Routes
