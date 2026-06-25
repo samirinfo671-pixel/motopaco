@@ -120,11 +120,11 @@ const megaMenuData = [
 
 /* ─── Helper Icons ───────────────────────────────────────────── */
 const HelpIcon = () => (
-  <HelpCircle className="w-[30px] h-[30px]" />
+  <img src="/img/cms/Aide-Motomax.svg" alt="Aide" className="w-[30px] h-[30px] object-contain" />
 );
 
 const HelmetIcon = () => (
-  <User className="w-[30px] h-[30px]" />
+  <img src="/img/cms/PackMoto-ICONES-HEADER-MonCompte.svg" alt="Mon Compte" className="w-[30px] h-[30px] object-contain" />
 );
 
 /* ─── Custom megamenu images ─────────────────────────────────── */
@@ -462,14 +462,14 @@ export const Header: React.FC = () => {
       <div className={`hidden lg:block transition-all duration-300 border-b ${isHome && !isScrolled ? 'bg-transparent border-transparent' : 'bg-white border-gray-200'}`}>
         <div className="max-w-[1650px] mx-auto px-4 flex items-center justify-between gap-4 h-[80px]">
           {/* MOTO PACO Logo */}
-          <div className="w-[220px] flex-shrink-0 flex justify-start">
+          <div className="lg:w-auto xl:w-[220px] flex-shrink-0 flex justify-start">
             <Link to="/" className="flex items-center py-1" aria-label="MOTO PACO — Accueil">
-              <img src={isHome && !isScrolled ? "/logo-white.png" : "/logo.png"} alt="MOTO PACO" className="h-12 w-auto object-contain" />
+              <img src={isHome && !isScrolled ? "/logo-white.png" : "/logo.png"} alt="MOTO PACO" className="h-10 xl:h-12 w-auto object-contain" />
             </Link>
           </div>
 
           {/* Search bar */}
-          <div className="flex-1 max-w-[550px] mx-auto relative">
+          <div className="flex-1 max-w-[550px] mx-2 xl:mx-auto relative">
             <div ref={searchRef} className="w-full relative">
               <form onSubmit={handleSearch} className="flex items-center">
                 <div className="relative w-full">
@@ -502,32 +502,32 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Right icons: Aide & FAQ + Mon Compte + Panier */}
-          <div className="w-[320px] flex-shrink-0 flex justify-end items-center gap-8 pr-4">
-            <Link to="/contact" className={`flex flex-col items-center gap-1.5 hover:text-[#E63012] transition-colors ${isHome && !isScrolled ? 'text-white' : 'text-black'}`} style={{ minWidth: 64 }}>
-              <span style={{ filter: isHome && !isScrolled ? 'invert(1)' : 'none' }} className="transition-all duration-300"><HelpIcon /></span>
-              <span className="text-[10px] font-bold italic uppercase tracking-wide mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>AIDE &amp; FAQ</span>
+          <div className="lg:w-auto xl:w-[320px] flex-shrink-0 flex justify-end items-center gap-3 lg:gap-5 xl:gap-8 lg:pr-2 xl:pr-4">
+            <Link to="/contact" className={`flex flex-col items-center gap-1 hover:text-[#E63012] transition-colors ${isHome && !isScrolled ? 'text-white' : 'text-black'}`} style={{ minWidth: 64 }}>
+              <span style={{ filter: isHome && !isScrolled ? 'invert(1)' : 'none' }} className="transition-all duration-300 flex items-center justify-center"><HelpIcon /></span>
+              <span className="text-[9px] xl:text-[10px] font-bold italic uppercase tracking-wide mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>AIDE &amp; FAQ</span>
             </Link>
             <Link
               to={user?.role === 'admin' ? '/admin/dashboard' : '/compte'}
-              className={`flex flex-col items-center gap-1.5 hover:text-[#E63012] transition-colors ${isHome && !isScrolled ? 'text-white' : 'text-black'}`}
+              className={`flex flex-col items-center gap-1 hover:text-[#E63012] transition-colors ${isHome && !isScrolled ? 'text-white' : 'text-black'}`}
               style={{ minWidth: 64 }}
             >
-              <span style={{ filter: isHome && !isScrolled ? 'invert(1)' : 'none' }} className="transition-all duration-300"><HelmetIcon /></span>
-              <span className="text-[10px] font-bold italic uppercase tracking-wide mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>MON COMPTE</span>
+              <span style={{ filter: isHome && !isScrolled ? 'invert(1)' : 'none' }} className="transition-all duration-300 flex items-center justify-center"><HelmetIcon /></span>
+              <span className="text-[9px] xl:text-[10px] font-bold italic uppercase tracking-wide mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>MON COMPTE</span>
             </Link>
             <button
               onClick={() => setCartOpen(true)}
-              className={`flex flex-col items-center gap-1.5 relative hover:opacity-85 transition-opacity ml-2 ${isHome && !isScrolled ? 'text-white' : 'text-black'}`}
+              className={`flex flex-col items-center gap-1 relative hover:opacity-85 transition-opacity ml-1 lg:ml-2 ${isHome && !isScrolled ? 'text-white' : 'text-black'}`}
               aria-label="Mon panier"
               style={{ minWidth: 64 }}
             >
-              <div className="relative">
+              <div className="relative flex items-center justify-center">
                 <ShoppingCart className="w-[30px] h-[30px]" fill={isHome && !isScrolled ? "#fff" : "#000"} color={isHome && !isScrolled ? "#fff" : "#000"} />
                 <span className="absolute -top-1.5 -right-2.5 w-5 h-5 rounded-full text-white text-[10px] font-black flex items-center justify-center shadow-sm bg-[#E63012]">
                   {cartQty}
                 </span>
               </div>
-              <span className="text-[12px] text-[#E63012] font-bold italic mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <span className="text-[11px] xl:text-[12px] text-[#E63012] font-bold italic mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 {formatPrice(cartTotal)}
               </span>
             </button>
@@ -541,28 +541,28 @@ export const Header: React.FC = () => {
           <nav className="flex items-center justify-center">
             {/* CASQUES */}
             <div onMouseEnter={() => openMenu('CASQUES')} className={`border-l border-r transition-colors ${isHome && !isScrolled ? 'border-white/10' : 'border-gray-300/60'}`}>
-              <Link to="/categorie/casques" className="flex items-center gap-1 px-6 py-3.5 text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
+              <Link to="/categorie/casques" className="flex items-center gap-1 px-3 xl:px-6 py-3.5 text-[12px] xl:text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
                 CASQUES
                 <ChevronDown className="w-3 h-3 transition-transform" style={{ color: isHome && !isScrolled ? '#fff' : '#000', transform: activeMenu === 'CASQUES' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
               </Link>
             </div>
             {/* ÉQUIPEMENTS */}
             <div onMouseEnter={() => openMenu('ÉQUIPEMENTS')} className={`border-r transition-colors ${isHome && !isScrolled ? 'border-white/10' : 'border-gray-300/60'}`}>
-              <Link to="/boutique" className="flex items-center gap-1 px-6 py-3.5 text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
+              <Link to="/boutique" className="flex items-center gap-1 px-3 xl:px-6 py-3.5 text-[12px] xl:text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
                 ÉQUIPEMENTS
                 <ChevronDown className="w-3 h-3 transition-transform" style={{ color: isHome && !isScrolled ? '#fff' : '#000', transform: activeMenu === 'ÉQUIPEMENTS' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
               </Link>
             </div>
             {/* ACCESSOIRES */}
             <div onMouseEnter={() => openMenu('ACCESSOIRES')} className={`border-r transition-colors ${isHome && !isScrolled ? 'border-white/10' : 'border-gray-300/60'}`}>
-              <Link to="/boutique" className="flex items-center gap-1 px-6 py-3.5 text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
+              <Link to="/boutique" className="flex items-center gap-1 px-3 xl:px-6 py-3.5 text-[12px] xl:text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
                 ACCESSOIRES
                 <ChevronDown className="w-3 h-3 transition-transform" style={{ color: isHome && !isScrolled ? '#fff' : '#000', transform: activeMenu === 'ACCESSOIRES' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
               </Link>
             </div>
             {/* ENTRETIEN */}
             <div onMouseEnter={() => openMenu('ENTRETIEN')} className={`border-r transition-colors ${isHome && !isScrolled ? 'border-white/10' : 'border-gray-300/60'}`}>
-              <Link to="/boutique" className="flex items-center gap-1 px-6 py-3.5 text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
+              <Link to="/boutique" className="flex items-center gap-1 px-3 xl:px-6 py-3.5 text-[12px] xl:text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: isHome && !isScrolled ? '#fff' : '#000' }}>
                 ENTRETIEN
                 <ChevronDown className="w-3 h-3 transition-transform" style={{ color: isHome && !isScrolled ? '#fff' : '#000', transform: activeMenu === 'ENTRETIEN' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
               </Link>
@@ -570,7 +570,7 @@ export const Header: React.FC = () => {
             {/* MARQUES */}
             <div onMouseEnter={() => openMenu('MARQUES')} className={`border-r transition-colors ${isHome && !isScrolled ? 'border-white/10' : 'border-gray-300/60'}`}>
               <button
-                className="flex items-center gap-1 px-6 py-3.5 text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors bg-transparent border-0 cursor-pointer"
+                className="flex items-center gap-1 px-3 xl:px-6 py-3.5 text-[12px] xl:text-[14px] uppercase tracking-wide whitespace-nowrap hover:text-[#E63012] transition-colors bg-transparent border-0 cursor-pointer"
                 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic', color: activeMenu === 'MARQUES' ? '#E63012' : (isHome && !isScrolled ? '#fff' : '#000') }}
               >
                 MARQUES
@@ -582,7 +582,7 @@ export const Header: React.FC = () => {
               <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-white text-[8px] font-black px-2 py-0.5 rounded-none whitespace-nowrap z-10 bg-black">
                 Jusqu'à -70% !
               </span>
-              <Link to="/boutique" className="flex items-center px-8 py-3.5 text-[14px] text-white uppercase tracking-wide whitespace-nowrap hover:bg-red-700 transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic' }}>
+              <Link to="/boutique" className="flex items-center px-4 xl:px-8 py-3.5 text-[12px] xl:text-[14px] text-white uppercase tracking-wide whitespace-nowrap hover:bg-red-700 transition-colors" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontStyle: 'italic' }}>
                 DESTOCKAGE !
               </Link>
             </div>
