@@ -425,6 +425,101 @@ export const AdminSettings: React.FC = () => {
         </div>
       </div>
 
+      {/* Google Sheets Integration */}
+      <div className="bg-[#111827]/80 backdrop-blur-xl border border-gray-800 rounded-2xl p-8 shadow-2xl">
+        <h2 className="font-display font-black text-lg uppercase tracking-widest text-white mb-6 pb-4 border-b border-gray-800 flex items-center gap-3">
+          <span className="w-1.5 h-6 bg-[#E63012] rounded-full inline-block"></span>
+          Intégration Google Sheets
+        </h2>
+        <div className="space-y-6">
+          <div>
+            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">
+              URL du Webhook Google Apps Script
+            </label>
+            <input
+              type="url"
+              value={settings.google_sheets_webhook_url || ''}
+              onChange={(e) => setSettings({ ...settings, google_sheets_webhook_url: e.target.value })}
+              placeholder="https://script.google.com/macros/s/XXXXXX/exec"
+              className="w-full bg-black border border-gray-700 rounded-lg px-5 py-4 focus:ring-0 focus:outline-none focus:border-[#E63012] text-white font-mono"
+            />
+            <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">
+              Laissez ce champ vide si vous ne souhaitez pas synchroniser vos commandes sur Google Sheets.
+            </p>
+          </div>
+
+          <div className="bg-black/40 border border-gray-800 rounded-xl p-6 text-xs text-gray-400 space-y-4">
+            <h3 className="text-white font-bold uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+              <span>📋</span> Guide d'installation rapide
+            </h3>
+            <ol className="list-decimal list-inside space-y-2 text-gray-455 font-medium leading-relaxed">
+              <li>Créez ou ouvrez une feuille de calcul sur <strong>Google Sheets</strong>.</li>
+              <li>Allez dans <strong>Extensions</strong> &gt; <strong>Apps Script</strong>.</li>
+              <li>Supprimez le code par défaut et collez le script ci-dessous :</li>
+            </ol>
+            
+            <pre className="bg-black border border-gray-800 rounded-lg p-4 font-mono text-[10px] text-green-400 overflow-x-auto max-h-64 custom-scrollbar select-all">
+{`function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Ajouter les en-têtes si la feuille est vide
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        "N° Commande", "Date", "Statut", "Client", "Téléphone", "Email", 
+        "Ville", "Adresse", "Sous-total", "Livraison", "Réduction", "Total", 
+        "Articles", "Notes", "Source"
+      ]);
+      // Formatage des en-têtes
+      var headerRange = sheet.getRange(1, 1, 1, 15);
+      headerRange.setFontWeight("bold");
+      headerRange.setBackground("#E63012");
+      headerRange.setFontColor("#ffffff");
+    }
+    
+    // Formater la liste des articles
+    var itemsStr = data.items.map(function(item) {
+      return item.product_name + " (" + (item.variant_label || "Unique") + ") x" + item.quantity;
+    }).join("\\n");
+    
+    sheet.appendRow([
+      data.order_number,
+      data.created_at,
+      data.status,
+      data.client_name,
+      data.phone,
+      data.email,
+      data.city,
+      data.address,
+      data.subtotal + " MAD",
+      data.shipping_cost + " MAD",
+      data.discount_amount + " MAD",
+      data.total + " MAD",
+      itemsStr,
+      data.notes || "",
+      data.source || "Direct"
+    ]);
+    
+    return ContentService.createTextOutput(JSON.stringify({ status: "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`}
+            </pre>
+
+            <ol className="list-decimal list-inside space-y-2 text-gray-455 font-medium leading-relaxed" start={4}>
+              <li>Cliquez sur le bouton <strong>Déployer</strong> &gt; <strong>Nouvel déploiement</strong>.</li>
+              <li>Sélectionnez le type <strong>Application Web</strong>.</li>
+              <li>Configurez : Exécuter en tant que : <strong>Moi</strong> | Qui a accès : <strong>Tout le monde</strong>.</li>
+              <li>Cliquez sur <strong>Déployer</strong>, autorisez les accès, puis copiez l'<strong>URL de l'application web</strong> et collez-la ci-dessus.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-[#111827]/80 backdrop-blur-xl border border-gray-800 rounded-2xl p-8 mb-10 shadow-2xl">
         <h2 className="font-display font-black text-lg uppercase tracking-widest text-white mb-6 pb-4 border-b border-gray-800 flex items-center gap-3">
           <span className="w-1.5 h-6 bg-[#E63012] rounded-full inline-block"></span>

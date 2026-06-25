@@ -4,6 +4,7 @@ import { generateOrderNumber } from '../utils/orderNumber.ts';
 import { authMiddleware, AuthenticatedRequest } from '../middleware/auth.ts';
 import { sendOrderEmails } from '../utils/mailer.ts';
 import { sendWhatsAppAlert } from '../utils/whatsapp.ts';
+import { syncOrderToGoogleSheets } from '../utils/googleSheets.ts';
 
 const router = Router();
 
@@ -198,6 +199,9 @@ router.post('/', (req, res) => {
       
       // Trigger WhatsApp notifications
       sendWhatsAppAlert(orderRecord, itemsRecords).catch(err => console.error('Error sending WhatsApp alert:', err));
+
+      // Trigger Google Sheets sync
+      syncOrderToGoogleSheets(orderRecord, itemsRecords).catch(err => console.error('Error syncing order to Google Sheets:', err));
     } catch (notifyErr) {
       console.error('Error triggering post-order notification routine:', notifyErr);
     }
