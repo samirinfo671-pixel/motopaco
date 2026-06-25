@@ -177,7 +177,7 @@ export const AdminWordPressImport: React.FC = () => {
                 Configuration API
               </h2>
               
-              <form onSubmit={handleSaveCredentials} className="space-y-5">
+              <form onSubmit={handleSaveCredentials} className="space-y-5" autoComplete="off">
                 {/* Woo URL */}
                 <div className="space-y-2">
                   <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
@@ -189,6 +189,7 @@ export const AdminWordPressImport: React.FC = () => {
                     value={wooUrl}
                     onChange={(e) => setWooUrl(e.target.value)}
                     placeholder="https://votre-boutique-wordpress.com"
+                    autoComplete="off"
                     className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 focus:ring-0 focus:outline-none focus:border-[#E63012] text-white font-mono text-sm"
                   />
                 </div>
@@ -205,6 +206,7 @@ export const AdminWordPressImport: React.FC = () => {
                       value={wooCk}
                       onChange={(e) => setWooCk(e.target.value)}
                       placeholder="ck_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                      autoComplete="new-password"
                       className="w-full bg-black border border-gray-700 rounded-lg pl-4 pr-10 py-3 focus:ring-0 focus:outline-none focus:border-[#E63012] text-white font-mono text-sm"
                     />
                     <button
@@ -229,6 +231,7 @@ export const AdminWordPressImport: React.FC = () => {
                       value={wooCs}
                       onChange={(e) => setWooCs(e.target.value)}
                       placeholder="cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                      autoComplete="new-password"
                       className="w-full bg-black border border-gray-700 rounded-lg pl-4 pr-10 py-3 focus:ring-0 focus:outline-none focus:border-[#E63012] text-white font-mono text-sm"
                     />
                     <button

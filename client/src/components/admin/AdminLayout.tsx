@@ -52,15 +52,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {/* Sidebar Navigation */}
       <aside className="w-64 bg-[#111827]/80 backdrop-blur-2xl border-r border-gray-800 flex flex-col justify-between hidden lg:flex shrink-0 shadow-2xl relative z-50">
         <div className="p-6">
-          <div className="flex items-center space-x-2 select-none mb-10 group cursor-pointer">
-            <svg className="w-7 h-7 text-[#E63012] fill-current group-hover:rotate-12 transition-transform duration-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0C7.58 0 4 3.58 4 8c0 2.21.9 4.21 2.34 5.66L12 24l5.66-10.34C19.1 12.21 20 10.21 20 8c0-4.42-3.58-8-8-8zm-1.5 13.5V5.5l5 4.5-5 3.5z" />
-            </svg>
-            <span className="race-livery text-xl tracking-tighter">
-              <span className="text-[#E63012]">PACK</span>
-              <span className="text-white ml-1">MOTO</span>
-            </span>
-          </div>
+          <Link to="/admin/dashboard" className="flex items-center select-none mb-10 cursor-pointer">
+            <img src="/logo-white.png" alt="MOTO PACO" className="h-9 w-auto object-contain" />
+          </Link>
 
           <nav className="space-y-1.5">
             {[
