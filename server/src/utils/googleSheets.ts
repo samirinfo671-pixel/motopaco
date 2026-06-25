@@ -2,9 +2,9 @@ import db from '../db/database.ts';
 
 export async function syncOrderToGoogleSheets(order: any, items: any[]) {
   try {
-    // Retrieve the Google Sheets Webhook URL from site settings
+    // Retrieve the Google Sheets Webhook URL from site settings or environment variables
     const row = db.prepare("SELECT value FROM site_settings WHERE key = 'google_sheets_webhook_url'").get() as { value: string } | undefined;
-    const webhookUrl = row?.value;
+    const webhookUrl = row?.value || process.env.GOOGLE_SHEETS_WEBHOOK_URL;
     
     if (!webhookUrl || !webhookUrl.trim()) {
       return; // No webhook configured, skip sync

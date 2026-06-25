@@ -81,6 +81,20 @@ export const Confirmation: React.FC = () => {
           <p className="font-mono text-lg font-bold text-[#E63012] bg-[#F9FAFB] inline-block px-4 py-2 border border-[#E5E7EB] rounded">
             {orderNumber}
           </p>
+
+          {/* Beautiful Alert/Notice Card */}
+          <div className="my-6 bg-[#FFF5F5] border-l-4 border-[#E63012] rounded-r p-6 max-w-xl mx-auto text-left flex items-start space-x-4 shadow-sm">
+            <div className="p-2 rounded-full bg-[#E63012]/10 text-[#E63012] shrink-0 mt-0.5 animate-pulse">
+              <PhoneCall className="w-5 h-5" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="font-display font-black text-xs tracking-wider text-[#E63012] uppercase">Confirmation Téléphonique Requise</h4>
+              <p className="text-xs text-[#5C3E3E] font-medium leading-relaxed font-body">
+                Notre service client va vous appeler par téléphone dans quelques instants pour confirmer votre adresse et valider la livraison. <strong>Veuillez rester à proximité de votre téléphone et répondre à notre appel.</strong>
+              </p>
+            </div>
+          </div>
+
           <div className="pt-2">
             <a
               href={waUrl}
