@@ -160,8 +160,9 @@ export const Produit: React.FC = () => {
     salePrice = null; // Override removes default sale logic
   }
 
-  const discountPercent = salePrice !== null ? Math.round((1 - salePrice / basePrice) * 100) : 0;
-  const isOutOfStock = selectedVariant ? selectedVariant.stock === 0 : false;
+  const hasNoVariants = !product.variants || product.variants.length === 0;
+  const allVariantsOutOfStock = product.variants ? product.variants.every(v => v.stock === 0) : true;
+  const isOutOfStock = product.is_out_of_stock === 1 || hasNoVariants || allVariantsOutOfStock || (selectedVariant ? selectedVariant.stock === 0 : true);
   const isLowStock = selectedVariant ? selectedVariant.stock > 0 && selectedVariant.stock <= 5 : false;
 
   const productSchema = {
@@ -177,7 +178,7 @@ export const Produit: React.FC = () => {
       "url": window.location.href,
       "priceCurrency": "MAD",
       "price": currentPrice.toString(),
-      "availability": selectedVariant && selectedVariant.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "availability": !isOutOfStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       "itemCondition": "https://schema.org/NewCondition",
       "seller": { "@type": "Organization", "name": "MOTO PACO" }
     },
@@ -324,24 +325,16 @@ export const Produit: React.FC = () => {
               <div className="pt-2">
                 <p className="text-[10px] font-bold uppercase text-[#E63012] tracking-wider leading-none">Votre prix Moto Paco</p>
                 <div className="flex items-baseline gap-2 mt-1">
-                  {currentPrice <= 0 ? (
-                    <span className="text-3xl font-black text-[#E63012] tracking-tight leading-none uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                      Sur demande
-                    </span>
-                  ) : (
-                    <>
-                      <span className="text-4xl font-black text-[#E63012] tracking-tight leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                        {formatPrice(currentPrice)}
-                      </span>
-                      <span className="text-xs text-gray-400 font-bold uppercase">TTC</span>
-                    </>
-                  )}
+                  <span className="text-4xl font-black text-[#E63012] tracking-tight leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    {formatPrice(currentPrice)}
+                  </span>
+                  <span className="text-xs text-gray-400 font-bold uppercase">TTC</span>
                 </div>
               </div>
             </div>
 
             {/* Stock indicator */}
-            {selectedVariant && selectedVariant.stock > 0 ? (
+            {!isOutOfStock && selectedVariant && selectedVariant.stock > 0 ? (
               <div className="border border-green-500/20 bg-green-50/30 p-4 rounded-xl flex items-center gap-3.5 shadow-[0_4px_20px_rgba(0,0,0,0.01)]">
                 <div className="relative flex h-3 w-3 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -748,84 +741,66 @@ export const Produit: React.FC = () => {
         )}
 
         {/* Price + buttons row */}
-        {currentPrice <= 0 ? (
-          <div className="px-3 py-3">
-            <a
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                `Bonjour MOTO PACO, je souhaiterais obtenir le prix et commander le produit suivant :\n\nProduit : ${product.name}\nSKU : ${selectedVariant?.sku || 'N/A'}\nLien : ${window.location.href}`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3.5 px-4 font-display font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
-            >
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963C16.59 2.019 14.113.992 11.488.992c-5.441 0-9.87 4.374-9.874 9.8.001 1.768.479 3.493 1.391 5.025l-1.007 3.684 3.793-.984c1.536.873 3.096 1.337 4.856 1.337z" />
-              </svg>
-              <span>DEMANDER LE PRIX SUR WHATSAPP</span>
-            </a>
+        <div className="px-3 py-3 flex items-center gap-2.5">
+          {/* Price display */}
+          <div className="flex flex-col shrink-0">
+            {salePrice !== null ? (
+              <>
+                <span className="text-[10px] text-gray-400 line-through leading-none">{formatPrice(basePrice)}</span>
+                <span className="text-lg font-black text-[#E63012] leading-none">{formatPrice(currentPrice)}</span>
+              </>
+            ) : (
+              <span className="text-lg font-black text-[#111827] leading-none">{formatPrice(currentPrice)}</span>
+            )}
           </div>
-        ) : (
-          <div className="px-3 py-3 flex items-center gap-2.5">
-            {/* Price display */}
-            <div className="flex flex-col shrink-0">
-              {salePrice !== null ? (
-                <>
-                  <span className="text-[10px] text-gray-400 line-through leading-none">{formatPrice(basePrice)}</span>
-                  <span className="text-lg font-black text-[#E63012] leading-none">{formatPrice(currentPrice)}</span>
-                </>
-              ) : (
-                <span className="text-lg font-black text-[#111827] leading-none">{formatPrice(currentPrice)}</span>
-              )}
-            </div>
 
-            {/* Qty stepper (compact) */}
-            <div className="flex items-center gap-2 bg-white border border-gray-300 px-3 py-2 shrink-0 rounded-none">
-              <button onClick={() => handleQtyChange(quantity - 1)} disabled={quantity <= 1} className="text-gray-500 disabled:text-gray-300 transition-colors" aria-label="Moins">
-                <Minus className="w-3.5 h-3.5 stroke-[3px]" />
-              </button>
-              <span className="text-sm font-black text-black w-4 text-center select-none">{quantity}</span>
-              <button onClick={() => handleQtyChange(quantity + 1)} disabled={selectedVariant ? quantity >= selectedVariant.stock : true} className="text-gray-500 disabled:text-gray-300 transition-colors" aria-label="Plus">
-                <Plus className="w-3.5 h-3.5 stroke-[3px]" />
-              </button>
-            </div>
-
-            {/* Add to Cart */}
-            <button
-              onClick={handleAddToCart}
-              disabled={!selectedVariant || isOutOfStock || isAdding}
-              className="flex-1 bg-[#E63012] text-white py-3.5 px-2 rounded-none font-display font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-1.5 disabled:bg-gray-200 disabled:text-gray-400 transition-all shadow-md active:scale-95"
-              id="mobile-add-to-cart"
-            >
-              {isAdding ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : isOutOfStock ? (
-                <span>ÉPUISÉ</span>
-              ) : (
-                <>
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>PANIER</span>
-                </>
-              )}
+          {/* Qty stepper (compact) */}
+          <div className="flex items-center gap-2 bg-white border border-gray-300 px-3 py-2 shrink-0 rounded-none">
+            <button onClick={() => handleQtyChange(quantity - 1)} disabled={quantity <= 1} className="text-gray-500 disabled:text-gray-300 transition-colors" aria-label="Moins">
+              <Minus className="w-3.5 h-3.5 stroke-[3px]" />
             </button>
-
-            {/* Buy Now */}
-            <button
-              onClick={handleBuyNow}
-              disabled={!selectedVariant || isOutOfStock}
-              className="flex-1 bg-black text-white py-3.5 px-2 rounded-none font-display font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-1.5 disabled:bg-gray-200 disabled:text-gray-400 transition-all shadow-md active:scale-95"
-              id="mobile-buy-now"
-            >
-              {isOutOfStock ? (
-                <span>RUPTURE</span>
-              ) : (
-                <>
-                  <Zap className="w-4 h-4" />
-                  <span>ACHETER</span>
-                </>
-              )}
+            <span className="text-sm font-black text-black w-4 text-center select-none">{quantity}</span>
+            <button onClick={() => handleQtyChange(quantity + 1)} disabled={selectedVariant ? quantity >= selectedVariant.stock : true} className="text-gray-500 disabled:text-gray-300 transition-colors" aria-label="Plus">
+              <Plus className="w-3.5 h-3.5 stroke-[3px]" />
             </button>
           </div>
-        )}
+
+          {/* Add to Cart */}
+          <button
+            onClick={handleAddToCart}
+            disabled={!selectedVariant || isOutOfStock || isAdding}
+            className="flex-1 bg-[#E63012] text-white py-3.5 px-2 rounded-none font-display font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-1.5 disabled:bg-gray-200 disabled:text-gray-400 transition-all shadow-md active:scale-95"
+            id="mobile-add-to-cart"
+          >
+            {isAdding ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : isOutOfStock ? (
+              <span>ÉPUISÉ</span>
+            ) : (
+              <>
+                <ShoppingBag className="w-4 h-4" />
+                <span>PANIER</span>
+              </>
+            )}
+          </button>
+
+          {/* Buy Now */}
+          <button
+            onClick={handleBuyNow}
+            disabled={!selectedVariant || isOutOfStock}
+            className="flex-1 bg-black text-white py-3.5 px-2 rounded-none font-display font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-1.5 disabled:bg-gray-200 disabled:text-gray-400 transition-all shadow-md active:scale-95"
+            id="mobile-buy-now"
+          >
+            {isOutOfStock ? (
+              <span>RUPTURE</span>
+            ) : (
+              <>
+                <Zap className="w-4 h-4" />
+                <span>ACHETER</span>
+              </>
+            )}
+          </button>
+        </div>
 
         {/* Trust micro-line */}
         <div className="flex items-center justify-center gap-4 pb-2 text-[9px] text-gray-400 font-bold uppercase tracking-wider">
