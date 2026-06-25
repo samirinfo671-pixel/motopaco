@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
+import db from './db/database.ts';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -54,12 +55,18 @@ app.use(express.urlencoded({ extended: true }));
 const uploadsDir = path.resolve(process.cwd(), 'uploads');
 app.use('/uploads', express.static(uploadsDir));
 
-// Seed the database on boot
+// Seed the database on boot if it is empty
 try {
-  seedDatabase();
-  cleanupDemoData();
-  organizeCatalog();
-  setupBestSellers();
+  const rowCount = db.prepare('SELECT count(*) as count FROM categories').get() as { count: number };
+  if (rowCount.count === 0) {
+    console.log('[DB] Database is empty. Running initialization seed, cleanup, and organization...');
+    seedDatabase();
+    cleanupDemoData();
+    organizeCatalog();
+    setupBestSellers();
+  } else {
+    console.log('[DB] Database already has data. Skipping boot-time seed, cleanup, and catalog reorganization.');
+  }
 } catch (error) {
   console.error('Seeding, cleanup, catalog organization or bestseller setup failed:', error);
 }

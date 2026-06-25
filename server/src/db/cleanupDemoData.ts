@@ -1,6 +1,16 @@
 import db from './database.ts';
 
 export function cleanupDemoData() {
+  try {
+    const cleanRow = db.prepare("SELECT value FROM site_settings WHERE key = 'demo_data_cleaned'").get() as { value: string } | undefined;
+    if (cleanRow && cleanRow.value === 'true') {
+      console.log('✨ Demo data already cleaned up. Skipping cleanup.');
+      return;
+    }
+  } catch (e) {
+    // If settings table doesn't exist yet, proceed with cleanup
+  }
+
   console.log('🧹 Starting database cleanup: Removing old demo products and empty categories...');
   
   try {
@@ -55,6 +65,13 @@ export function cleanupDemoData() {
       `);
       const resultBrands = deleteBrandsStmt.run();
       console.log(`✅ Cleaned up ${resultBrands.changes} unused brands.`);
+
+      // Mark as cleaned in site_settings so it never runs again
+      db.prepare(`
+        INSERT INTO site_settings (key, value) 
+        VALUES ('demo_data_cleaned', 'true') 
+        ON CONFLICT(key) DO UPDATE SET value = excluded.value
+      `).run();
     })();
     
     console.log('🎉 Database cleanup successfully completed!');
