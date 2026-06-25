@@ -119,12 +119,20 @@ const megaMenuData = [
 ];
 
 /* ─── Helper Icons ───────────────────────────────────────────── */
-const HelpIcon = () => (
-  <img src="/img/cms/Aide-Motomax.svg" alt="Aide" className="w-[30px] h-[30px] object-contain" />
+const HelpIcon: React.FC<{ white?: boolean }> = ({ white }) => (
+  <img 
+    src={white ? "/img/cms/Aide-Motomax-white.svg" : "/img/cms/Aide-Motomax.svg"} 
+    alt="Aide" 
+    className="w-[30px] h-[30px] object-contain" 
+  />
 );
 
-const HelmetIcon = () => (
-  <img src="/img/cms/PackMoto-ICONES-HEADER-MonCompte.svg" alt="Mon Compte" className="w-[30px] h-[30px] object-contain" />
+const HelmetIcon: React.FC<{ white?: boolean }> = ({ white }) => (
+  <img 
+    src={white ? "/img/cms/PackMoto-ICONES-HEADER-MonCompte-white.svg" : "/img/cms/PackMoto-ICONES-HEADER-MonCompte.svg"} 
+    alt="Mon Compte" 
+    className="w-[30px] h-[30px] object-contain" 
+  />
 );
 
 /* ─── Custom megamenu images ─────────────────────────────────── */
@@ -504,7 +512,7 @@ export const Header: React.FC = () => {
           {/* Right icons: Aide & FAQ + Mon Compte + Panier */}
           <div className="lg:w-auto xl:w-[320px] flex-shrink-0 flex justify-end items-center gap-3 lg:gap-5 xl:gap-8 lg:pr-2 xl:pr-4">
             <Link to="/contact" className={`flex flex-col items-center gap-1 hover:text-[#E63012] transition-colors ${isHome && !isScrolled ? 'text-white' : 'text-black'}`} style={{ minWidth: 64 }}>
-              <span style={{ filter: isHome && !isScrolled ? 'invert(1)' : 'none' }} className="transition-all duration-300 flex items-center justify-center"><HelpIcon /></span>
+              <span className="transition-all duration-300 flex items-center justify-center"><HelpIcon white={isHome && !isScrolled} /></span>
               <span className="text-[9px] xl:text-[10px] font-bold italic uppercase tracking-wide mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>AIDE &amp; FAQ</span>
             </Link>
             <Link
@@ -512,7 +520,7 @@ export const Header: React.FC = () => {
               className={`flex flex-col items-center gap-1 hover:text-[#E63012] transition-colors ${isHome && !isScrolled ? 'text-white' : 'text-black'}`}
               style={{ minWidth: 64 }}
             >
-              <span style={{ filter: isHome && !isScrolled ? 'invert(1)' : 'none' }} className="transition-all duration-300 flex items-center justify-center"><HelmetIcon /></span>
+              <span className="transition-all duration-300 flex items-center justify-center"><HelmetIcon white={isHome && !isScrolled} /></span>
               <span className="text-[9px] xl:text-[10px] font-bold italic uppercase tracking-wide mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>MON COMPTE</span>
             </Link>
             <button
