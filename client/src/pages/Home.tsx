@@ -308,10 +308,32 @@ export const Home: React.FC = () => {
             className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-0' : 'opacity-60'}`}
             style={{ backgroundImage: 'url(/video-thumbnail.jpg)' }}
           />
+          <style>{`
+            #hero-youtube-video {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              min-width: 100%;
+              min-height: 100%;
+            }
+            @media (min-aspect-ratio: 16/9) {
+              #hero-youtube-video {
+                width: 100%;
+                height: 56.25vw;
+              }
+            }
+            @media (max-aspect-ratio: 16/9) {
+              #hero-youtube-video {
+                width: 177.78vh;
+                height: 100%;
+              }
+            }
+          `}</style>
           <iframe
             id="hero-youtube-video"
             src="https://www.youtube.com/embed/9SBy1sAlAhs?autoplay=1&mute=1&loop=1&playlist=9SBy1sAlAhs&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&vq=hd1080"
-            className={`absolute top-1/2 left-1/2 w-[177.78vh] h-[56.25vw] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
+            className={`transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             title="Moto Paco Promo Video"
             frameBorder="0"
