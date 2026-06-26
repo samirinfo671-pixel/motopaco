@@ -6,7 +6,8 @@
   "scripts": {
     "install:all": "npm install && npm install --prefix client && npm install --prefix server",
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-    "build:all": "npm run build --prefix client && npm run build --prefix server"
+    "build:all": "npm run build --prefix client && npm run build --prefix server",
+    "db:export": "npm run db:export --prefix server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

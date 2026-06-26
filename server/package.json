@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --external:better-sqlite3",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "db:export": "sqlite3 data.db \".dump\" > src/db/seed.sql && echo '✅ seed.sql updated — commit this file to persist your products on Railway'"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

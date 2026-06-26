@@ -3,7 +3,10 @@ builder = "dockerfile"
 dockerfilePath = "server/Dockerfile"
 
 [deploy]
-startCommand = "node dist/index.js"
+startCommand = "/bin/sh -c \"mkdir -p /app/data && if [ ! -f /app/data/data.db ]; then echo '[BOOT] No database found - restoring from seed.sql...' && sqlite3 /app/data/data.db < /app/src/db/seed.sql && echo '[BOOT] Database restored successfully.'; else echo '[BOOT] Existing database found - skipping restore.'; fi && node dist/index.js\""
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
+
+[[volumes]]
+mountPath = "/app/data"

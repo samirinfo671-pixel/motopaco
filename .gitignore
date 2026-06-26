@@ -8,10 +8,9 @@ dist/
 client/dist/
 server/dist/
 
-# SQLite database files
-*.db
+# SQLite database files — the live DB is not committed, only seed.sql is
 *.db-journal
-server/data.db
+# Local dev databases (not tracked — seed.sql is the source of truth)
 data.db
 
 # Environment files
