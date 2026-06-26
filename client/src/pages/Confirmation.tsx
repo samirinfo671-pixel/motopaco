@@ -43,10 +43,40 @@ export const Confirmation: React.FC = () => {
 
   const { settings } = useSettingsStore();
   const phoneVal = settings.whatsapp_number || '212667389916';
-  // Derive WhatsApp support link with customized order query message
-  const waUrl = `https://wa.me/${phoneVal}?text=${encodeURIComponent(
-    `Bonjour MOTO PACO, je souhaiterais suivre l'état de ma commande numéro : ${orderNumber || 'MOTO-PACO'}`
-  )}`;
+  
+  // Construct pre-filled detailed order receipt text
+  let messageText = '';
+  if (order) {
+    const itemsListText = order.items
+      ? order.items
+          .map(
+            (i) =>
+              `- ${i.product_name} (${i.variant_label || 'Unique'}) x${
+                i.quantity
+              } : ${formatPrice(i.line_total)}`
+          )
+          .join('\n')
+      : '';
+
+    messageText =
+      `Bonjour MOTO PACO, voici les détails de ma commande #${order.order_number} :\n\n` +
+      `Nom: ${order.shipping_first_name} ${order.shipping_last_name}\n` +
+      `Tél: ${order.shipping_phone}\n` +
+      `Adresse: ${order.shipping_address}, ${order.shipping_city}\n\n` +
+      `Articles:\n${itemsListText}\n\n` +
+      `Sous-total: ${formatPrice(order.subtotal)}\n` +
+      `Frais de livraison: ${
+        order.shipping_cost === 0 ? 'Gratuit' : formatPrice(order.shipping_cost)
+      }\n` +
+      `Total: ${formatPrice(order.total)}\n` +
+      `Mode de Paiement: Paiement à la livraison`;
+  } else {
+    messageText = `Bonjour MOTO PACO, je souhaiterais suivre l'état de ma commande numéro : ${
+      orderNumber || 'MOTO-PACO'
+    }`;
+  }
+
+  const waUrl = `https://wa.me/${phoneVal}?text=${encodeURIComponent(messageText)}`;
 
   // Determine active status tracking steps
   const getStatusStep = (status: string) => {
@@ -100,10 +130,12 @@ export const Confirmation: React.FC = () => {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#22C55E] hover:bg-[#1eb052] text-white px-6 py-3 rounded font-display text-xs font-bold uppercase tracking-wider inline-flex items-center space-x-2 transition-colors shadow"
+              className="bg-[#22C55E] hover:bg-[#1eb052] text-white px-8 py-4 rounded font-display text-xs font-black uppercase tracking-wider inline-flex items-center space-x-2 transition-colors shadow-lg border border-[#1eb052] hover:scale-[1.02] transform duration-150"
             >
-              <PhoneCall className="w-4 h-4" />
-              <span>Suivre via WhatsApp</span>
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.017-5.114-2.871-6.973-1.854-1.859-4.33-2.88-6.967-2.881-5.441 0-9.869 4.42-9.873 9.863-.001 1.701.45 3.361 1.307 4.8l-.348 1.272.368-.345zm1.183-11.785c-.214-.478-.44-.488-.642-.496-.166-.007-.356-.007-.547-.007-.19 0-.5.07-.762.356-.262.285-1 .978-1 2.387 0 1.41 1.025 2.775 1.168 2.966.143.19 2.016 3.078 4.885 4.318.682.295 1.215.47 1.629.601.685.218 1.31.187 1.803.113.55-.082 1.688-.69 1.925-1.356.238-.666.238-1.238.167-1.356-.07-.119-.262-.19-.548-.333-.285-.143-1.688-.833-1.95-.928-.261-.095-.452-.143-.642.143-.19.285-.737.928-.904 1.119-.166.19-.333.214-.618.07-.285-.143-1.205-.444-2.296-1.417-.848-.756-1.421-1.69-1.587-1.976-.167-.285-.018-.44.125-.58.127-.127.285-.333.428-.5.143-.166.19-.285.285-.476.095-.19.048-.356-.024-.5-.071-.143-.642-1.547-.88-2.12z" />
+              </svg>
+              <span>Envoyer ma commande sur WhatsApp</span>
             </a>
           </div>
         </div>

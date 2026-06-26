@@ -10,8 +10,9 @@ import ProductCard from '../components/product/ProductCard.tsx';
 import SEOHead from '../components/seo/SEOHead.tsx';
 import InstagramFeed from '../components/layout/InstagramFeed.tsx';
 
-/* ─── Memoized VideoBackground to prevent iframe reload during re-renders ─── */
-const VideoBackground = React.memo(({ isVideoLoaded }: { isVideoLoaded: boolean }) => {
+const VideoBackground = React.memo(({ isVideoLoaded, onLoaded }: { isVideoLoaded: boolean; onLoaded?: () => void }) => {
+  const mobileVideoUrl = "https://scontent.cdninstagram.com/o1/v/t2/f2/m86/AQOv9ifPpZQQ2JN0EyL5kd4deZTv5g-nDWYbihA5HCfdUsezPQBhcNvAMXfQJvNHLYCvHnapSoi2-plmy1DgFVeqVYHpnAKSmogIf-M.mp4?_nc_cat=107&_nc_sid=5e9851&_nc_ht=scontent.cdninstagram.com&_nc_ohc=t5PGef89dJYQ7kNvwGdEvhn&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTkwODY4MzU0OTcxMzYwMCwiYXNzZXRfYWdlX2RheXMiOjIxLCJ2aV91c2VjYXNlX2lkIjoxMDA5OSwiZHVyYXRpb25fcyI6MjYsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&vs=845b2898d010b437&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC8zRDQyQjkwQTVDNUM1RkZEQzA2QzVCMEFDM0ExOEE4OF92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzJCNDZDNUYwM0RGMkU0RUJENUQyQUU4RkQ3Q0Y5RkFCX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACaAk8HPgPzjBhUCKAJDMywXQDqIcrAgxJwYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Bhp9gm8BuSK3Mb9HTZbH2w&edm=ANo9K5cEAAAA&_nc_zt=28&_nc_tpa=Q5bMBQGKp2RavBapyRrdfrYh6VNFS3VWViZ5nSYaePe4URTfMZH8blkR6ou_9OImbjrgt_sY3Oalxg6W&oh=00_Af89rXKk0_ORPh_xrHS7GMU7QboiMeWco2hX6Mi9pudHwg&oe=6A40749C";
+
   return (
     <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden select-none bg-[#0a0a0a]">
       {/* Thumbnail Layer */}
@@ -41,10 +42,23 @@ const VideoBackground = React.memo(({ isVideoLoaded }: { isVideoLoaded: boolean 
           }
         }
       `}</style>
+      
+      {/* Mobile Direct Video */}
+      <video
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 block sm:hidden ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
+        src={mobileVideoUrl}
+        autoPlay
+        muted
+        loop
+        playsInline
+        onLoadedData={onLoaded}
+      />
+
+      {/* Desktop YouTube Iframe */}
       <iframe
         id="hero-youtube-video"
         src="https://www.youtube.com/embed/9SBy1sAlAhs?autoplay=1&mute=1&loop=1&playlist=9SBy1sAlAhs&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&vq=hd1080"
-        className={`transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
+        className={`transition-opacity duration-1000 hidden sm:block ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         title="Moto Paco Promo Video"
         frameBorder="0"
@@ -348,42 +362,42 @@ export const Home: React.FC = () => {
       {/* ===== HERO BANNER WITH VIDEO BACKGROUND ===== */}
       <section className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] min-h-[420px] bg-black overflow-hidden flex items-end justify-center pb-12 sm:pb-16 lg:pb-20 -mt-[56px] lg:-mt-[132px]">
         {/* Background Video Wrapper */}
-        <VideoBackground isVideoLoaded={isVideoLoaded} />
+        <VideoBackground isVideoLoaded={isVideoLoaded} onLoaded={() => setIsVideoLoaded(true)} />
         
         {/* Sleek Dark Gradient Overlay (Transparent at top to show full video action) */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
 
         {/* Dynamic & Premium Overlay Content (Aligned to the bottom of the viewport) */}
         <div className="relative z-20 max-w-[1200px] px-6 text-center text-white flex flex-col items-center">
-          <span className="inline-block bg-[#E63012] text-white text-[9px] sm:text-xs font-black uppercase tracking-widest px-3.5 py-1.5 mb-3.5 skew-x-[-12deg] shadow-[0_4px_15px_rgba(230,48,18,0.4)]">
+          <span className="hidden sm:inline-block bg-[#E63012] text-white text-[9px] sm:text-xs font-black uppercase tracking-widest px-3.5 py-1.5 mb-3.5 skew-x-[-12deg] shadow-[0_4px_15px_rgba(230,48,18,0.4)]">
             100% MOTARD MAROC
           </span>
           <span 
-            className="text-white/80 font-mono text-[10px] sm:text-sm font-black tracking-[0.25em] uppercase mb-2 animate-pulse"
+            className="hidden sm:block text-white/80 font-mono text-[10px] sm:text-sm font-black tracking-[0.25em] uppercase mb-2 animate-pulse"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             L'EXCELLENCE MOTARDE AU MAROC
           </span>
           <h1 
-            className="text-3xl sm:text-5xl lg:text-6xl font-black italic tracking-wide uppercase text-white mb-4 leading-tight drop-shadow-lg"
+            className="text-2xl sm:text-5xl lg:text-6xl font-black italic tracking-wide uppercase text-white mb-2 sm:mb-4 leading-tight drop-shadow-lg"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             MOTO PACO
           </h1>
-          <p className="text-gray-300 text-xs sm:text-base max-w-xl mb-6 leading-relaxed font-medium">
+          <p className="block text-gray-300 text-[11px] sm:text-base max-w-xl mb-4 sm:mb-6 leading-relaxed font-medium px-4 sm:px-0">
             Découvrez le plus grand choix d'équipements de marque, d'accessoires moto et de protections certifiées au meilleur prix.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <Link
               to="/boutique"
-              className="bg-[#E63012] hover:bg-red-700 text-white font-black text-[11px] sm:text-xs uppercase tracking-widest px-8 py-4 rounded-none transition-all duration-300 shadow-[0_4px_20px_rgba(230,48,18,0.4)] hover:shadow-[0_4px_30px_rgba(230,48,18,0.6)] transform hover:-translate-y-0.5"
+              className="bg-[#E63012] hover:bg-red-700 text-white font-black text-[11px] sm:text-xs uppercase tracking-widest px-6 py-3 sm:px-8 sm:py-4 rounded-none transition-all duration-300 shadow-[0_4px_20px_rgba(230,48,18,0.4)] hover:shadow-[0_4px_30px_rgba(230,48,18,0.6)] transform hover:-translate-y-0.5"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
               DÉCOUVRIR LA BOUTIQUE
             </Link>
             <Link
               to="/boutique?search=destockage"
-              className="bg-transparent hover:bg-white/10 text-white border-2 border-white hover:border-[#E63012] font-black text-[11px] sm:text-xs uppercase tracking-widest px-8 py-4 rounded-none transition-all duration-300 transform hover:-translate-y-0.5"
+              className="hidden sm:block bg-transparent hover:bg-white/10 text-white border-2 border-white hover:border-[#E63012] font-black text-[11px] sm:text-xs uppercase tracking-widest px-8 py-4 rounded-none transition-all duration-300 transform hover:-translate-y-0.5"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
               NOS PROMOS DESTOCKAGE

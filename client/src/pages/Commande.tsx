@@ -156,29 +156,6 @@ export const Commande: React.FC = () => {
         items: items
       });
 
-      // Auto-open WhatsApp with the detailed pre-filled order receipt
-      try {
-        const itemsListText = items.map(i => {
-          let p = i.product.sale_price ?? i.product.base_price;
-          if (i.variant && i.variant.price_override !== null && i.variant.price_override !== undefined) p = i.variant.price_override;
-          return `- ${i.product.name} (Taille: ${i.variant.size || 'Unique'}) x${i.quantity} : ${formatPrice(p * i.quantity)}`;
-        }).join('\n');
-        
-        const messageText = `Bonjour MOTO PACO, voici les détails de ma commande #${order.order_number} :\n\n` +
-          `Nom: ${firstName} ${lastName}\n` +
-          `Tél: ${orderData.shipping_phone}\n` +
-          `Adresse: ${address}, ${city}\n\n` +
-          `Articles:\n${itemsListText}\n\n` +
-          `Sous-total: ${formatPrice(subtotal)}\n` +
-          `Frais de livraison: ${order.shipping_cost === 0 ? 'Gratuit' : formatPrice(order.shipping_cost)}\n` +
-          `Total: ${formatPrice(order.total)}\n` +
-          `Mode de Paiement: Paiement à la livraison`;
-
-        const waUrl = `https://wa.me/212667389916?text=${encodeURIComponent(messageText)}`;
-        window.open(waUrl, '_blank');
-      } catch (e) {
-        console.error('Failed to open WhatsApp window:', e);
-      }
 
       // Clear shopping cart
       clearCart();
