@@ -35,10 +35,25 @@ router.get('/', (req, res) => {
     `;
     const params: any[] = [];
 
+const CATEGORY_SLUG_MAP: Record<string, string> = {
+  'casques': 'casques-moto',
+  'gants': 'gants-moto',
+  'bottes': 'bottes-moto',
+  'bagagerie': 'bagagerie-moto',
+  'vestes-blousons': 'jackets',
+  'echappements': 'echappement-moto',
+  'kit-chaine': 'kit-chaine-moto',
+  'accessoires-usb': 'support-pour-telephone-portable',
+  'pantalons': 'pantalon-moto',
+  'sacoches': 'sacoche-moto',
+  'protections': 'protection-moteur-cadre'
+};
+
     if (category) {
       // Allow filtering by category slug or parent category slug
+      const mappedSlug = CATEGORY_SLUG_MAP[category as string] || category;
       query += ` AND (c.slug = ? OR c.parent_id = (SELECT id FROM categories WHERE slug = ?))`;
-      params.push(category, category);
+      params.push(mappedSlug, mappedSlug);
     }
 
     if (brand) {

@@ -29,11 +29,26 @@ router.get('/', (req, res) => {
   }
 });
 
+export const CATEGORY_SLUG_MAP: Record<string, string> = {
+  'casques': 'casques-moto',
+  'gants': 'gants-moto',
+  'bottes': 'bottes-moto',
+  'bagagerie': 'bagagerie-moto',
+  'vestes-blousons': 'jackets',
+  'echappements': 'echappement-moto',
+  'kit-chaine': 'kit-chaine-moto',
+  'accessoires-usb': 'support-pour-telephone-portable',
+  'pantalons': 'pantalon-moto',
+  'sacoches': 'sacoche-moto',
+  'protections': 'protection-moteur-cadre'
+};
+
 // GET /api/categories/:slug
 router.get('/:slug', (req, res) => {
   const { slug } = req.params;
   try {
-    const category = db.prepare('SELECT * FROM categories WHERE slug = ?').get(slug);
+    const mappedSlug = CATEGORY_SLUG_MAP[slug] || slug;
+    const category = db.prepare('SELECT * FROM categories WHERE slug = ?').get(mappedSlug);
     if (!category) {
       return res.status(404).json({ message: 'Catégorie non trouvée.' });
     }
