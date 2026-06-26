@@ -10,6 +10,49 @@ import ProductCard from '../components/product/ProductCard.tsx';
 import SEOHead from '../components/seo/SEOHead.tsx';
 import InstagramFeed from '../components/layout/InstagramFeed.tsx';
 
+/* ─── Memoized VideoBackground to prevent iframe reload during re-renders ─── */
+const VideoBackground = React.memo(({ isVideoLoaded }: { isVideoLoaded: boolean }) => {
+  return (
+    <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden select-none bg-[#0a0a0a]">
+      {/* Thumbnail Layer */}
+      <div 
+        className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-0' : 'opacity-60'}`}
+        style={{ backgroundImage: 'url(/video-thumbnail.jpg)' }}
+      />
+      <style>{`
+        #hero-youtube-video {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          min-width: 100%;
+          min-height: 100%;
+        }
+        @media (min-aspect-ratio: 16/9) {
+          #hero-youtube-video {
+            width: 100%;
+            height: 56.25vw;
+          }
+        }
+        @media (max-aspect-ratio: 16/9) {
+          #hero-youtube-video {
+            width: 177.78vh;
+            height: 100%;
+          }
+        }
+      `}</style>
+      <iframe
+        id="hero-youtube-video"
+        src="https://www.youtube.com/embed/9SBy1sAlAhs?autoplay=1&mute=1&loop=1&playlist=9SBy1sAlAhs&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&vq=hd1080"
+        className={`transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        title="Moto Paco Promo Video"
+        frameBorder="0"
+      />
+    </div>
+  );
+});
+
 /* ─── Category inline SVGs ───────────────────────────────────── */
 const categoryIcons = {
   Bagagerie: '/categories/ICONE-GLOBAL-Topcase.svg',
@@ -167,7 +210,10 @@ export const Home: React.FC = () => {
           events: {
             onReady: (event: any) => {
               event.target.mute();
-              event.target.playVideo();
+              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+              if (!isMobile) {
+                event.target.playVideo();
+              }
             },
             onStateChange: (event: any) => {
               // State 1 represents YT.PlayerState.PLAYING
@@ -302,51 +348,18 @@ export const Home: React.FC = () => {
       {/* ===== HERO BANNER WITH VIDEO BACKGROUND ===== */}
       <section className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] min-h-[420px] bg-black overflow-hidden flex items-end justify-center pb-12 sm:pb-16 lg:pb-20 -mt-[56px] lg:-mt-[132px]">
         {/* Background Video Wrapper */}
-        <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden select-none bg-[#0a0a0a]">
-          {/* Thumbnail Layer */}
-          <div 
-            className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-0' : 'opacity-60'}`}
-            style={{ backgroundImage: 'url(/video-thumbnail.jpg)' }}
-          />
-          <style>{`
-            #hero-youtube-video {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              min-width: 100%;
-              min-height: 100%;
-            }
-            @media (min-aspect-ratio: 16/9) {
-              #hero-youtube-video {
-                width: 100%;
-                height: 56.25vw;
-              }
-            }
-            @media (max-aspect-ratio: 16/9) {
-              #hero-youtube-video {
-                width: 177.78vh;
-                height: 100%;
-              }
-            }
-          `}</style>
-          <iframe
-            id="hero-youtube-video"
-            src="https://www.youtube.com/embed/9SBy1sAlAhs?autoplay=1&mute=1&loop=1&playlist=9SBy1sAlAhs&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&vq=hd1080"
-            className={`transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-60' : 'opacity-0'}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            title="Moto Paco Promo Video"
-            frameBorder="0"
-          />
-        </div>
+        <VideoBackground isVideoLoaded={isVideoLoaded} />
         
         {/* Sleek Dark Gradient Overlay (Transparent at top to show full video action) */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
 
         {/* Dynamic & Premium Overlay Content (Aligned to the bottom of the viewport) */}
         <div className="relative z-20 max-w-[1200px] px-6 text-center text-white flex flex-col items-center">
+          <span className="inline-block bg-[#E63012] text-white text-[9px] sm:text-xs font-black uppercase tracking-widest px-3.5 py-1.5 mb-3.5 skew-x-[-12deg] shadow-[0_4px_15px_rgba(230,48,18,0.4)]">
+            100% MOTARD MAROC
+          </span>
           <span 
-            className="text-[#E63012] font-mono text-xs sm:text-sm font-black tracking-[0.25em] uppercase mb-2 animate-pulse"
+            className="text-white/80 font-mono text-[10px] sm:text-sm font-black tracking-[0.25em] uppercase mb-2 animate-pulse"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             L'EXCELLENCE MOTARDE AU MAROC
@@ -382,80 +395,84 @@ export const Home: React.FC = () => {
       {/* ===== PROMO CATEGORY BANNERS GRID ===== */}
       <section className="bg-white pt-8 pb-4">
         <div className="max-w-[1650px] mx-auto px-3 sm:px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             
             {/* Casques Banner */}
-            <Link to="/categorie/casques-moto" className="relative block overflow-hidden rounded-xl bg-black group h-36 border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-casques.png" alt="Casques Promo" className="absolute right-0 top-0 h-full w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
-              <div className="absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="relative z-20 p-5 flex flex-col justify-between h-full w-[55%]">
-                <div className="space-y-1">
-                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">CASQUES</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-50%</span>
+            <Link to="/categorie/casques-moto" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+              <img src="/uploads/cat-casques.png" alt="Casques Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
+              <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
+              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
+              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">CASQUES</h3>
+                  <div className="flex items-baseline gap-1 sm:gap-2">
+                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-50%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
 
             {/* Vestes Banner */}
-            <Link to="/categorie/jackets" className="relative block overflow-hidden rounded-xl bg-black group h-36 border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-vestes.png" alt="Vestes Promo" className="absolute right-0 top-0 h-full w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
-              <div className="absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="relative z-20 p-5 flex flex-col justify-between h-full w-[55%]">
-                <div className="space-y-1">
-                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">VESTES</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-60%</span>
+            <Link to="/categorie/jackets" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+              <img src="/uploads/cat-vestes.png" alt="Vestes Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
+              <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
+              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
+              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">VESTES</h3>
+                  <div className="flex items-baseline gap-1 sm:gap-2">
+                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-60%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
 
             {/* Gants Banner */}
-            <Link to="/categorie/gants-moto" className="relative block overflow-hidden rounded-xl bg-black group h-36 border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-gants.png" alt="Gants Promo" className="absolute right-0 top-0 h-full w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
-              <div className="absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="relative z-20 p-5 flex flex-col justify-between h-full w-[55%]">
-                <div className="space-y-1">
-                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">GANTS</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-40%</span>
+            <Link to="/categorie/gants-moto" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+              <img src="/uploads/cat-gants.png" alt="Gants Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
+              <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
+              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
+              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">GANTS</h3>
+                  <div className="flex items-baseline gap-1 sm:gap-2">
+                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-40%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
 
             {/* Antivols Banner */}
-            <Link to="/boutique?search=antivol" className="relative block overflow-hidden rounded-xl bg-black group h-36 border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-antivols.png" alt="Antivols Promo" className="absolute right-0 top-0 h-full w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
-              <div className="absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="relative z-20 p-5 flex flex-col justify-between h-full w-[55%]">
-                <div className="space-y-1">
-                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">ANTIVOLS</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-30%</span>
+            <Link to="/boutique?search=antivol" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+              <img src="/uploads/cat-antivols.png" alt="Antivols Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
+              <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
+              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
+              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
+                <div className="space-y-0.5 sm:space-y-1">
+                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">ANTIVOLS</h3>
+                  <div className="flex items-baseline gap-1 sm:gap-2">
+                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-30%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
@@ -485,7 +502,7 @@ export const Home: React.FC = () => {
                 <Link
                   key={cat.name}
                   to={linkTo}
-                  className="flex items-center gap-4 bg-white border border-gray-100 hover:border-[#E63012]/30 p-3.5 rounded-xl hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-300 group"
+                  className="flex items-center gap-4 bg-white border border-gray-100 border-l-[3px] border-l-[#E63012] sm:border-l-gray-100 hover:border-[#E63012]/30 p-3.5 rounded-xl hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-300 group"
                 >
                   <div className="w-12 h-12 rounded-full bg-[#F9FAFB] border border-gray-100/80 flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 group-hover:bg-red-50/30 transition-all duration-300">
                     {typeof iconObj === 'string' ? (
@@ -519,22 +536,26 @@ export const Home: React.FC = () => {
           {/* Section Header: Tabs — mobile: stacked centered, desktop: full divider */}
           <div className="mb-6 sm:mb-8">
             {/* Mobile Tab Bar */}
-            <div className="flex justify-center gap-2 sm:hidden mb-0">
+            <div className="flex justify-center gap-3 sm:hidden mb-4 px-1">
               <button
                 onClick={() => setActiveTab('bestsellers')}
-                className={`flex-1 py-3 text-[13px] font-black uppercase italic tracking-wide transition-all border-b-2 ${
-                  activeTab === 'bestsellers' ? 'text-[#111] border-[#E63012]' : 'text-gray-400 border-transparent'
+                className={`flex-1 py-3 text-[12px] font-black uppercase italic tracking-wider transition-all skew-x-[-10deg] ${
+                  activeTab === 'bestsellers' 
+                    ? 'bg-[#E63012] text-white shadow-[0_4px_12px_rgba(230,48,18,0.3)]' 
+                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}
               >
-                TOP VENTES
+                <span className="inline-block skew-x-[10deg]">TOP VENTES</span>
               </button>
               <button
                 onClick={() => setActiveTab('new')}
-                className={`flex-1 py-3 text-[13px] font-black uppercase italic tracking-wide transition-all border-b-2 ${
-                  activeTab === 'new' ? 'text-[#111] border-[#E63012]' : 'text-gray-400 border-transparent'
+                className={`flex-1 py-3 text-[12px] font-black uppercase italic tracking-wider transition-all skew-x-[-10deg] ${
+                  activeTab === 'new' 
+                    ? 'bg-[#E63012] text-white shadow-[0_4px_12px_rgba(230,48,18,0.3)]' 
+                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}
               >
-                NOUVEAUTÉS
+                <span className="inline-block skew-x-[10deg]">NOUVEAUTÉS</span>
               </button>
             </div>
             {/* Desktop Full Header with dividers */}
@@ -682,8 +703,8 @@ export const Home: React.FC = () => {
             <div className="flex-1 h-px bg-gray-300"></div>
           </div>
 
-          {/* Dynamic brand logo grid with hover effect */}
-          <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-3.5 items-center justify-items-center">
+          {/* Dynamic brand logo grid with hover effect — hidden on mobile */}
+          <div className="hidden md:grid grid-cols-4 lg:grid-cols-9 gap-3.5 items-center justify-items-center">
             {Object.entries(brandSVGs).map(([name, LogoComponent]) => {
               const slug = name === '100%' ? '100-percent' : name.toLowerCase().replace(/\s+/g, '-');
               return (
@@ -699,6 +720,26 @@ export const Home: React.FC = () => {
                 </Link>
               );
             })}
+          </div>
+
+          {/* Mobile Brands Loop (Visible only on mobile/tablet) */}
+          <div className="block md:hidden overflow-hidden relative w-full py-4 border-y border-gray-100 bg-[#F9FAFB]/40">
+            <div className="animate-brand-loop flex gap-12 items-center">
+              {/* Render twice for seamless looping */}
+              {[...Object.entries(brandSVGs), ...Object.entries(brandSVGs)].map(([name, LogoComponent], idx) => {
+                const slug = name === '100%' ? '100-percent' : name.toLowerCase().replace(/\s+/g, '-');
+                return (
+                  <Link
+                    key={`${name}-${idx}`}
+                    to={`/boutique?brand=${slug}`}
+                    className="flex flex-col items-center justify-center flex-shrink-0 w-24 text-gray-400 hover:text-[#E63012] transition-colors"
+                  >
+                    <LogoComponent />
+                    <span className="text-[8px] font-mono font-black uppercase tracking-wider mt-1 text-gray-400/80">{name}</span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>

@@ -847,10 +847,11 @@ export const Header: React.FC = () => {
             </button>
             <button
               onClick={() => setCartOpen(true)}
-              className="relative p-2 rounded-lg hover:bg-gray-50 transition-colors"
+              className={`relative p-2 rounded-lg transition-colors ${isHome && !isScrolled ? 'hover:bg-white/10' : 'hover:bg-gray-50'}`}
               aria-label="Mon panier"
             >
-              <ShoppingCart className="w-5 h-5 text-gray-800" />
+              <ShoppingCart className={`w-5 h-5 ${isHome && !isScrolled ? 'text-white' : 'text-[#E63012]'}`} />
+
               {cartQty > 0 && (
                 <span className="absolute top-0 right-0 w-4 h-4 rounded-full bg-[#E63012] text-white text-[9px] font-black flex items-center justify-center">
                   {cartQty}

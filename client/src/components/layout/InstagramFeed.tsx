@@ -183,12 +183,11 @@ export const InstagramFeed: React.FC = () => {
             className="flex gap-4 sm:gap-5 overflow-x-auto scrollbar-none snap-x snap-mandatory pb-4"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
-            {posts.map((post, idx) => (
+             {posts.map((post, idx) => (
               <motion.div 
                 key={post.id}
                 initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
                 className="min-w-[240px] w-[240px] sm:min-w-[290px] sm:w-[290px] bg-white border border-gray-100 p-3 flex flex-col hover:border-gray-300 hover:shadow-lg transition-all rounded relative group/post snap-start"
               >
