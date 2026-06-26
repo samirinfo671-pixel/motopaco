@@ -186,7 +186,7 @@ export const Produit: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] pt-0 lg:pt-6 pb-32 lg:pb-16">
+    <div className="min-h-screen bg-[#F9FAFB] pt-0 lg:pt-8 pb-36 lg:pb-16">
       <SEOHead
         title={`${product.name} Maroc | Prix et Caractéristiques - MOTO PACO`}
         description={product.short_description || product.description}
@@ -226,23 +226,20 @@ export const Produit: React.FC = () => {
         </div>
 
         {/* ─── Main 2-col grid ─────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-10 lg:mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-10 mb-10 lg:mb-16">
 
           {/* ── Left: Images ── */}
           <div className="lg:col-span-6 relative">
-            {/* Promo Badges Desktop Overlay */}
-            <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5 items-start">
+            {/* Promo Badges Overlay */}
+            <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 items-start">
               {salePrice !== null && (
-                <span className="bg-[#E63012] text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-wider shadow-sm">
-                  PROMO -{((1 - salePrice / basePrice) * 100).toFixed(2).replace('.', ',')}%
+                <span className="bg-[#E63012] text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-wider shadow-md rounded-sm">
+                  -{((1 - salePrice / basePrice) * 100).toFixed(0)}% PROMO
                 </span>
               )}
-              <span className="bg-black text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-wider shadow-sm">
-                Retour GRATUIT
-              </span>
-              {salePrice !== null && (
-                <span className="bg-[#F5A623] text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-wider shadow-sm">
-                  Promo !
+              {isLowStock && (
+                <span className="bg-amber-500 text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-wider shadow-md rounded-sm flex items-center gap-1">
+                  <span className="animate-pulse">⚡</span> Stock limité
                 </span>
               )}
             </div>
@@ -254,7 +251,7 @@ export const Produit: React.FC = () => {
           </div>
 
           {/* ── Right: Info panel ── */}
-          <div className="lg:col-span-6 space-y-4 lg:space-y-6">
+          <div className="lg:col-span-6 space-y-4 lg:space-y-5 px-3 lg:px-0 pt-4 lg:pt-0">
 
             {/* Brand badge + name */}
             <div className="space-y-2">
@@ -262,18 +259,14 @@ export const Produit: React.FC = () => {
                 <span className="bg-black text-white text-[9px] font-mono tracking-widest font-black uppercase px-2.5 py-1 rounded-sm">
                   Officiel {product.brand_name}
                 </span>
-                {selectedVariant && (
-                  <span className="bg-gray-100 text-gray-500 text-[9px] font-mono px-2 py-0.5 rounded border border-gray-200 uppercase tracking-wider">
-                    SKU: {selectedVariant.sku}
-                  </span>
-                )}
+                <span className="bg-green-50 border border-green-200 text-green-700 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-sm">✓ Produit Authentique</span>
               </div>
-              <h1 className="font-bold text-2xl sm:text-3xl text-black tracking-normal uppercase leading-tight" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <h1 className="font-black text-[22px] sm:text-3xl text-[#111827] uppercase leading-tight" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 {product.name}
               </h1>
 
-              {/* Stars + reviews count */}
-              <div className="flex flex-wrap items-center gap-3">
+              {/* Stars + social proof */}
+              <div className="flex flex-wrap items-center gap-2.5">
                 <div className="flex items-center gap-1.5">
                   <div className="flex text-yellow-500">
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -282,75 +275,68 @@ export const Produit: React.FC = () => {
                   </div>
                   <span className="text-xs font-black text-black">{reviews.length || 62} avis</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 text-[#E63012] px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">
+                <span className="text-gray-300">|</span>
+                <div className="flex items-center gap-1 bg-red-50 border border-red-200 text-[#E63012] px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wide">
                   <span className="animate-pulse">🔥</span>
                   <span>+<strong>{product.sold_count || 120}</strong> vendus</span>
                 </div>
               </div>
             </div>
 
-            <hr className="border-gray-200" />
-
             {/* ─── Price box ─────────────────────────────────── */}
-            <div className="bg-white border border-gray-200/80 p-5 rounded-none shadow-sm space-y-4">
-              <div className="flex justify-between items-start gap-4 flex-wrap">
-                {/* Public vs Sale Price Details */}
-                <div className="space-y-1">
-                  {basePrice > 0 && (
-                    <div className="flex items-center gap-2 text-xs text-gray-500 font-bold uppercase">
-                      <span>Prix public conseillé</span>
-                      <span className="font-mono text-gray-400 line-through text-sm">
-                        {formatPrice(basePrice)}
+            <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 p-4 rounded-xl shadow-sm">
+              {salePrice !== null ? (
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase text-gray-400 tracking-wider leading-none mb-1.5">Prix public conseillé</p>
+                    <span className="text-sm font-mono text-gray-400 line-through">{formatPrice(basePrice)}</span>
+                    <div className="flex items-baseline gap-2 mt-1">
+                      <span className="text-[32px] sm:text-4xl font-black text-[#E63012] tracking-tight leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                        {formatPrice(currentPrice)}
                       </span>
+                      <span className="text-xs text-gray-400 font-bold uppercase">TTC</span>
                     </div>
-                  )}
-                  {salePrice !== null && (
-                    <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-[#E63012] px-2.5 py-1 rounded text-[11px] font-bold w-fit">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#E63012] animate-pulse"></span>
-                      <span>Meilleur prix garanti · Économisez {formatPrice(basePrice - salePrice)}</span>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="bg-[#E63012] text-white text-[10px] font-black px-2 py-0.5 rounded-sm">-{((1 - salePrice / basePrice) * 100).toFixed(0)}%</span>
+                      <span className="text-[11px] text-green-700 font-black">Vous économisez {formatPrice(basePrice - salePrice)}</span>
                     </div>
-                  )}
-                </div>
-
-                {/* Savings Percent Badge */}
-                {salePrice !== null && (
-                  <div className="bg-[#E63012] text-white font-extrabold text-xs px-3 py-1.5 rounded-none uppercase tracking-wider text-center flex flex-col justify-center min-w-[120px] shadow-sm">
-                    <span className="text-[9px] font-bold text-white/70 uppercase block leading-none">Économie réalisée</span>
-                    <span className="text-sm font-black mt-1 leading-none">-{((1 - salePrice / basePrice) * 100).toFixed(2).replace('.', ',')}%</span>
                   </div>
-                )}
-              </div>
-
-              {/* Main Price */}
-              <div className="pt-2">
-                <p className="text-[10px] font-bold uppercase text-[#E63012] tracking-wider leading-none">Votre prix Moto Paco</p>
-                <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-4xl font-black text-[#E63012] tracking-tight leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                    {formatPrice(currentPrice)}
-                  </span>
-                  <span className="text-xs text-gray-400 font-bold uppercase">TTC</span>
+                  <div className="shrink-0 bg-[#E63012] text-white font-extrabold text-xs px-3 py-3 rounded-lg uppercase tracking-wider text-center flex flex-col justify-center shadow-md">
+                    <span className="text-[8px] font-bold text-white/70 uppercase block leading-none">Économie</span>
+                    <span className="text-xl font-black mt-0.5 leading-none">-{((1 - salePrice / basePrice) * 100).toFixed(0)}%</span>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-[#E63012] tracking-wider leading-none mb-1">Votre prix Moto Paco</p>
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <span className="text-[32px] sm:text-4xl font-black text-[#111827] tracking-tight leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                      {formatPrice(currentPrice)}
+                    </span>
+                    <span className="text-xs text-gray-400 font-bold uppercase">TTC</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Stock indicator */}
             {!isOutOfStock && selectedVariant && selectedVariant.stock > 0 ? (
-              <div className="border border-green-500/20 bg-green-50/30 p-4 rounded-xl flex items-center gap-3.5 shadow-[0_4px_20px_rgba(0,0,0,0.01)]">
+              <div className="border border-green-200 bg-green-50 px-4 py-3 rounded-xl flex items-center gap-3">
                 <div className="relative flex h-3 w-3 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </div>
                 <div className="text-xs">
-                  <p className="font-black text-green-800 uppercase tracking-wider text-[12px] leading-tight">En stock - Prêt à être expédié</p>
-                  <p className="text-gray-500 font-medium mt-1 leading-normal">Commande passée avant 14h expédiée le jour même (Livraison 24/48h)</p>
+                  <p className="font-black text-green-800 uppercase tracking-wider text-[11px] leading-tight">En stock — Expédition 24/48h</p>
+                  <p className="text-green-600 font-medium mt-0.5">Commande avant 14h → expédiée le jour même</p>
                 </div>
               </div>
             ) : (
-              <div className="border border-red-500/20 bg-red-50/30 p-4 rounded-xl flex items-center gap-3.5 shadow-[0_4px_20px_rgba(0,0,0,0.01)]">
+              <div className="border border-red-200 bg-red-50 px-4 py-3 rounded-xl flex items-center gap-3">
                 <div className="h-3 w-3 rounded-full bg-red-500 shrink-0"></div>
                 <div className="text-xs">
-                  <p className="font-black text-red-800 uppercase tracking-wider text-[12px] leading-tight">Rupture de Stock</p>
-                  <p className="text-gray-500 font-medium mt-1 leading-normal">Ce produit est victime de son succès. Réapprovisionnement en cours.</p>
+                  <p className="font-black text-red-800 uppercase tracking-wider text-[11px] leading-tight">Rupture de Stock</p>
+                  <p className="text-red-600 font-medium mt-0.5">Réapprovisionnement en cours.</p>
                 </div>
               </div>
             )}
@@ -358,13 +344,13 @@ export const Produit: React.FC = () => {
             {/* ─── Variants / Sizes ─────────────────────────── */}
             {product.variants && product.variants.length > 0 && (
               <div className="space-y-3">
-                <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                  <h3 className="text-xs font-display font-black text-black uppercase tracking-widest">Options / Tailles</h3>
-                  <button 
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xs font-black text-black uppercase tracking-widest">Options / Tailles
+                    {selectedVariant && <span className="ml-2 text-[#E63012] font-black">— {selectedVariant.size}</span>}
+                  </h3>
+                  <button
                     onClick={() => {
-                      if (product) {
-                        setActiveSizeTab(getInitialSizeGuideTab(product.category_slug));
-                      }
+                      if (product) setActiveSizeTab(getInitialSizeGuideTab(product.category_slug));
                       setIsSizeGuideOpen(true);
                     }}
                     className="text-[#E63012] font-black text-[10px] tracking-wider uppercase border-b border-[#E63012] pb-0.5 hover:text-black transition-colors"
@@ -372,7 +358,7 @@ export const Produit: React.FC = () => {
                     Guide des tailles
                   </button>
                 </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                   {product.variants.map((v) => {
                     const isSelected = selectedVariant?.id === v.id;
                     return (
@@ -380,19 +366,19 @@ export const Produit: React.FC = () => {
                         key={v.id}
                         onClick={() => { setSelectedVariant(v); setQuantity(1); }}
                         disabled={v.stock === 0}
-                        className={`py-3 px-2 text-xs font-display font-bold border transition-all text-center rounded-none relative flex flex-col items-center justify-center min-h-[52px] ${
+                        className={`py-2.5 px-2 text-xs font-bold border-2 transition-all text-center rounded-lg relative flex flex-col items-center justify-center min-h-[48px] ${
                           isSelected
-                            ? 'border-black bg-black text-white shadow-sm'
+                            ? 'border-[#E63012] bg-[#E63012]/5 text-[#E63012] shadow-sm'
                             : v.stock === 0
                             ? 'border-gray-100 bg-gray-50/50 text-gray-300 cursor-not-allowed line-through opacity-40'
-                            : 'border-gray-200 bg-white text-black hover:border-black hover:bg-gray-50'
+                            : 'border-gray-200 bg-white text-black hover:border-[#E63012]/40 hover:bg-red-50/30'
                         }`}
                       >
                         <span className="font-black uppercase text-[11px] tracking-wider">{v.size || 'Taille Unique'}</span>
                         {v.color && v.color !== 'Standard' && (
-                          <span className={`text-[8px] tracking-wider mt-0.5 truncate max-w-full font-mono uppercase ${isSelected ? 'text-gray-400' : 'text-gray-500'}`}>{v.color}</span>
+                          <span className={`text-[8px] tracking-wider mt-0.5 truncate max-w-full font-mono uppercase ${isSelected ? 'text-[#E63012]/70' : 'text-gray-500'}`}>{v.color}</span>
                         )}
-                        {isSelected && <div className="absolute bottom-1 right-2 w-1.5 h-1.5 bg-[#E63012] rounded-full"></div>}
+                        {isSelected && <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#E63012] rounded-full"></div>}
                       </button>
                     );
                   })}
@@ -402,48 +388,30 @@ export const Produit: React.FC = () => {
 
             {/* Variant description */}
             {selectedVariant?.description && (
-              <div className="bg-[#F9FAFB] border-l-2 border-l-[#E63012] border border-gray-200 p-3.5 rounded-r text-xs text-[#4B5563] leading-relaxed">
-                <span className="text-[9px] font-black text-[#E63012] uppercase tracking-widest block mb-1">Spécifications :</span>
+              <div className="bg-blue-50/40 border border-blue-200/50 border-l-2 border-l-blue-400 p-3.5 rounded-r-xl text-xs text-[#4B5563] leading-relaxed">
+                <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest block mb-1">Spécifications :</span>
                 <p className="whitespace-pre-line font-medium">{selectedVariant.description}</p>
               </div>
             )}
 
-            {/* ─── Delivery badges ─────────────────────────── */}
-            <div className="grid grid-cols-2 gap-3.5">
-              <div className="bg-white border border-gray-100 p-4 rounded-xl flex items-center gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-                <span className="text-xl">📅</span>
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] text-gray-400 font-extrabold uppercase tracking-wider leading-none">Livraison estimée</span>
-                  <span className="text-[11px] sm:text-xs font-black text-gray-800 mt-1.5 leading-none">{getEstimatedDelivery()}</span>
-                </div>
-              </div>
-              <div className="bg-white border border-gray-100 p-4 rounded-xl flex items-center gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-                <Truck className="w-5 h-5 text-[#E63012] flex-shrink-0" />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] text-gray-400 font-extrabold uppercase tracking-wider leading-none">Frais de port</span>
-                  <span className="text-[11px] sm:text-xs font-black text-green-600 mt-1.5 leading-none uppercase">LIVRAISON OFFERTE</span>
-                </div>
-              </div>
-            </div>
-
-            {/* ─── Qty + CTA — DESKTOP only (mobile uses sticky bar) ── */}
-            <div className="hidden lg:block space-y-4">
-              <div className="flex gap-3 items-stretch">
+            {/* ─── Qty + CTA — DESKTOP only ── */}
+            <div className="hidden lg:block">
+              <div className="flex gap-2.5 items-stretch">
                 {/* Stepper */}
-                <div className="flex items-center gap-3 bg-white border border-gray-200 px-4 py-2 shrink-0 rounded-none shadow-sm">
-                  <button onClick={() => handleQtyChange(quantity - 1)} disabled={quantity <= 1} className="text-gray-500 hover:text-[#E63012] disabled:text-gray-300 transition-colors" aria-label="Moins">
+                <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl overflow-hidden shrink-0">
+                  <button onClick={() => handleQtyChange(quantity - 1)} disabled={quantity <= 1} className="w-10 h-full flex items-center justify-center text-gray-500 hover:text-[#E63012] disabled:text-gray-300 transition-colors px-2" aria-label="Moins">
                     <Minus className="w-4 h-4 stroke-[3px]" />
                   </button>
-                  <span className="text-sm font-mono font-black text-black w-5 text-center select-none">{quantity}</span>
-                  <button onClick={() => handleQtyChange(quantity + 1)} disabled={selectedVariant ? quantity >= selectedVariant.stock : true} className="text-gray-500 hover:text-[#E63012] disabled:text-gray-300 transition-colors" aria-label="Plus">
+                  <span className="text-sm font-mono font-black text-black w-8 text-center select-none border-x border-gray-200 py-4">{quantity}</span>
+                  <button onClick={() => handleQtyChange(quantity + 1)} disabled={selectedVariant ? quantity >= selectedVariant.stock : true} className="w-10 h-full flex items-center justify-center text-gray-500 hover:text-[#E63012] disabled:text-gray-300 transition-colors px-2" aria-label="Plus">
                     <Plus className="w-4 h-4 stroke-[3px]" />
                   </button>
                 </div>
-                {/* Main CTA: Add to cart */}
+                {/* Add to cart */}
                 <button
                   onClick={handleAddToCart}
                   disabled={!selectedVariant || isOutOfStock || isAdding}
-                  className="flex-1 bg-black hover:bg-gray-900 text-white py-4 px-4 rounded-none font-display font-black uppercase tracking-widest text-[12px] flex items-center justify-center gap-1.5 transition-all duration-300 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm"
+                  className="flex-1 bg-gradient-to-r from-[#111827] to-[#1f2937] hover:from-[#E63012] hover:to-[#ff4d1c] text-white py-4 px-4 rounded-xl font-display font-black uppercase tracking-widest text-[12px] flex items-center justify-center gap-2 transition-all duration-300 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 shadow-[0_4px_14px_rgba(0,0,0,0.25)] disabled:shadow-none active:scale-95"
                 >
                   {isAdding ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -451,52 +419,74 @@ export const Produit: React.FC = () => {
                     <span>ÉPUISÉ</span>
                   ) : (
                     <>
-                      <ShoppingBag className="w-4 h-4 stroke-[2.5px]" />
-                      <span>PANIER</span>
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>AJOUTER AU PANIER</span>
                     </>
                   )}
                 </button>
-                {/* Buy Now CTA */}
+                {/* Buy Now */}
                 <button
                   onClick={handleBuyNow}
                   disabled={!selectedVariant || isOutOfStock}
-                  className="flex-1 bg-[#E63012] hover:bg-black text-white py-4 px-4 rounded-none font-display font-black uppercase tracking-widest text-[12px] flex items-center justify-center gap-1.5 transition-all duration-300 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm"
+                  className="flex-1 bg-gradient-to-r from-[#E63012] to-[#ff4d1c] hover:from-[#111827] hover:to-[#1f2937] text-white py-4 px-4 rounded-xl font-display font-black uppercase tracking-widest text-[12px] flex items-center justify-center gap-2 transition-all duration-300 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 shadow-[0_4px_14px_rgba(230,48,18,0.4)] disabled:shadow-none active:scale-95"
                 >
                   {isOutOfStock ? (
-                    <span>RUPTURE DE STOCK</span>
+                    <span>RUPTURE</span>
                   ) : (
                     <>
-                      <Zap className="w-4 h-4" />
-                      <span>ACHETER DIRECT</span>
+                      <Zap className="w-4 h-4 fill-current" />
+                      <span>ACHETER MAINTENANT</span>
                     </>
                   )}
                 </button>
+              </div>
+
+              {/* WhatsApp assist */}
+              <a
+                href={`https://wa.me/${whatsappNumber}?text=Bonjour, je souhaite des informations sur le produit : ${encodeURIComponent(product.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2.5 flex items-center justify-center gap-2 border border-green-300 bg-green-50 hover:bg-green-100 text-green-700 py-2.5 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all w-full"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.118 1.532 5.845L.057 23.998l6.305-1.654A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.864 0-3.6-.504-5.093-1.382l-.364-.215-3.742.982.998-3.649-.237-.375A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+                Conseil par WhatsApp
+              </a>
+            </div>
+
+            {/* ─── Delivery mini badges ─────────────────── */}
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="bg-white border border-gray-100 p-3.5 rounded-xl flex items-center gap-2.5 shadow-sm">
+                <span className="text-lg">📅</span>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[8px] text-gray-400 font-black uppercase tracking-wider leading-none">Livraison estimée</span>
+                  <span className="text-[11px] font-black text-gray-800 mt-1 leading-none">{getEstimatedDelivery()}</span>
+                </div>
+              </div>
+              <div className="bg-white border border-gray-100 p-3.5 rounded-xl flex items-center gap-2.5 shadow-sm">
+                <Truck className="w-4 h-4 text-[#E63012] flex-shrink-0" />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[8px] text-gray-400 font-black uppercase tracking-wider leading-none">Frais de port</span>
+                  <span className="text-[11px] font-black text-green-600 mt-1 leading-none uppercase">OFFERTE</span>
+                </div>
               </div>
             </div>
 
             {/* ─── Trust badges ─────────────────────────────── */}
-            <div className="grid grid-cols-3 gap-2 border-t border-gray-200 pt-6 text-center">
-              <div className="flex flex-col items-center p-3 bg-white border border-gray-100 hover:border-gray-300 transition-all text-xs">
-                <div className="relative w-8 h-8 flex items-center justify-center mb-1.5">
-                  <Truck className="w-6 h-6 text-black" />
-                  <span className="absolute -top-1 -right-1 bg-[#E63012] text-white text-[7px] px-1 py-0.5 rounded-full font-black leading-none">Gift</span>
-                </div>
-                <span className="font-extrabold text-black uppercase tracking-wider text-[11px]">LIVRAISON OFFERTE</span>
-                <span className="text-gray-400 mt-1 text-[10px] leading-tight font-medium">Livraison gratuite dès 2000 DH d'achat</span>
+            <div className="grid grid-cols-3 gap-2 pt-1">
+              <div className="flex flex-col items-center p-3 bg-white border border-gray-100 rounded-xl hover:border-[#E63012]/30 hover:shadow-sm transition-all text-center">
+                <Truck className="w-5 h-5 text-[#E63012] mb-1.5" />
+                <span className="font-black text-black uppercase text-[10px] tracking-wide leading-tight">Livraison Offerte</span>
+                <span className="text-gray-400 mt-0.5 text-[9px] leading-tight">dès 2000 DH</span>
               </div>
-              <div className="flex flex-col items-center p-3 bg-white border border-gray-100 hover:border-gray-300 transition-all text-xs">
-                <div className="relative w-8 h-8 flex items-center justify-center mb-1.5">
-                  <RefreshCw className="w-6 h-6 text-[#E63012]" />
-                </div>
-                <span className="font-extrabold text-black uppercase tracking-wider text-[11px]">RETOURS GRATUITS</span>
-                <span className="text-gray-400 mt-1 text-[10px] leading-tight font-medium">Échangez gratuitement pendant 30 jours</span>
+              <div className="flex flex-col items-center p-3 bg-white border border-gray-100 rounded-xl hover:border-[#E63012]/30 hover:shadow-sm transition-all text-center">
+                <RefreshCw className="w-5 h-5 text-[#E63012] mb-1.5" />
+                <span className="font-black text-black uppercase text-[10px] tracking-wide leading-tight">Retours Gratuits</span>
+                <span className="text-gray-400 mt-0.5 text-[9px] leading-tight">sous 30 jours</span>
               </div>
-              <div className="flex flex-col items-center p-3 bg-white border border-gray-100 hover:border-gray-300 transition-all text-xs">
-                <div className="relative w-8 h-8 flex items-center justify-center mb-1.5">
-                  <Award className="w-6 h-6 text-black" />
-                </div>
-                <span className="font-extrabold text-black uppercase tracking-wider text-[11px]">PROGRAMME FIDÉLITÉ</span>
-                <span className="text-gray-400 mt-1 text-[10px] leading-tight font-medium">Cumulez des réductions après chaque achat</span>
+              <div className="flex flex-col items-center p-3 bg-white border border-gray-100 rounded-xl hover:border-[#E63012]/30 hover:shadow-sm transition-all text-center">
+                <ShieldCheck className="w-5 h-5 text-[#E63012] mb-1.5" />
+                <span className="font-black text-black uppercase text-[10px] tracking-wide leading-tight">100% Authentique</span>
+                <span className="text-gray-400 mt-0.5 text-[9px] leading-tight">Officiel Maroc</span>
               </div>
             </div>
 
@@ -730,7 +720,7 @@ export const Produit: React.FC = () => {
       {/* ════════════════════════════════════════════════════════ */}
       {/* ── MOBILE STICKY BOTTOM CTA BAR ─────────────────────── */}
       {/* ════════════════════════════════════════════════════════ */}
-      <div className="lg:hidden fixed bottom-[56px] left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.12)]">
+      <div className="lg:hidden fixed bottom-[56px] left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-8px_30px_rgba(0,0,0,0.15)]">
         {/* Urgency ticker */}
         {isLowStock && (
           <div className="bg-amber-500 text-white text-center text-[10px] font-black uppercase tracking-widest py-1 px-4 flex items-center justify-center gap-2">
@@ -740,36 +730,52 @@ export const Produit: React.FC = () => {
           </div>
         )}
 
-        {/* Price + buttons row */}
-        <div className="px-3 py-3 flex items-center gap-2.5">
-          {/* Price display */}
-          <div className="flex flex-col shrink-0">
+        {/* Main CTA container — single compact row */}
+        <div className="px-3 pt-2.5 pb-2 flex items-center gap-2.5">
+
+          {/* Price block */}
+          <div className="flex flex-col justify-center min-w-0 shrink-0">
             {salePrice !== null ? (
               <>
-                <span className="text-[10px] text-gray-400 line-through leading-none">{formatPrice(basePrice)}</span>
-                <span className="text-lg font-black text-[#E63012] leading-none">{formatPrice(currentPrice)}</span>
+                <span className="text-[9px] text-gray-400 line-through leading-none font-mono">{formatPrice(basePrice)}</span>
+                <div className="flex items-baseline gap-1 mt-0.5">
+                  <span className="text-[17px] font-black text-[#E63012] leading-none tracking-tight">{formatPrice(currentPrice)}</span>
+                  <span className="text-[9px] font-black text-white bg-[#E63012] px-1 py-0.5 leading-none rounded-sm">
+                    -{((1 - salePrice / basePrice) * 100).toFixed(0)}%
+                  </span>
+                </div>
               </>
             ) : (
-              <span className="text-lg font-black text-[#111827] leading-none">{formatPrice(currentPrice)}</span>
+              <span className="text-[17px] font-black text-[#111827] leading-none tracking-tight">{formatPrice(currentPrice)}</span>
             )}
           </div>
 
-          {/* Qty stepper (compact) */}
-          <div className="flex items-center gap-2 bg-white border border-gray-300 px-3 py-2 shrink-0 rounded-none">
-            <button onClick={() => handleQtyChange(quantity - 1)} disabled={quantity <= 1} className="text-gray-500 disabled:text-gray-300 transition-colors" aria-label="Moins">
-              <Minus className="w-3.5 h-3.5 stroke-[3px]" />
+          {/* Qty stepper */}
+          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg overflow-hidden shrink-0">
+            <button
+              onClick={() => handleQtyChange(quantity - 1)}
+              disabled={quantity <= 1}
+              className="w-8 h-9 flex items-center justify-center text-gray-500 disabled:text-gray-300 hover:bg-gray-100 transition-colors"
+              aria-label="Moins"
+            >
+              <Minus className="w-3 h-3 stroke-[3px]" />
             </button>
-            <span className="text-sm font-black text-black w-4 text-center select-none">{quantity}</span>
-            <button onClick={() => handleQtyChange(quantity + 1)} disabled={selectedVariant ? quantity >= selectedVariant.stock : true} className="text-gray-500 disabled:text-gray-300 transition-colors" aria-label="Plus">
-              <Plus className="w-3.5 h-3.5 stroke-[3px]" />
+            <span className="text-sm font-black text-black w-6 text-center select-none border-x border-gray-200 h-9 flex items-center justify-center">{quantity}</span>
+            <button
+              onClick={() => handleQtyChange(quantity + 1)}
+              disabled={selectedVariant ? quantity >= selectedVariant.stock : true}
+              className="w-8 h-9 flex items-center justify-center text-gray-500 disabled:text-gray-300 hover:bg-gray-100 transition-colors"
+              aria-label="Plus"
+            >
+              <Plus className="w-3 h-3 stroke-[3px]" />
             </button>
           </div>
 
-          {/* Add to Cart */}
+          {/* Add to Cart — red pill */}
           <button
             onClick={handleAddToCart}
             disabled={!selectedVariant || isOutOfStock || isAdding}
-            className="flex-1 bg-[#E63012] text-white py-3.5 px-2 rounded-none font-display font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-1.5 disabled:bg-gray-200 disabled:text-gray-400 transition-all shadow-md active:scale-95"
+            className="flex-1 relative overflow-hidden bg-gradient-to-r from-[#E63012] to-[#ff4d1c] text-white py-3 px-3 rounded-xl font-display font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-1.5 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 transition-all active:scale-95 shadow-[0_4px_14px_rgba(230,48,18,0.4)] disabled:shadow-none"
             id="mobile-add-to-cart"
           >
             {isAdding ? (
@@ -778,17 +784,17 @@ export const Produit: React.FC = () => {
               <span>ÉPUISÉ</span>
             ) : (
               <>
-                <ShoppingBag className="w-4 h-4" />
+                <ShoppingBag className="w-3.5 h-3.5" />
                 <span>PANIER</span>
               </>
             )}
           </button>
 
-          {/* Buy Now */}
+          {/* Buy Now — dark pill */}
           <button
             onClick={handleBuyNow}
             disabled={!selectedVariant || isOutOfStock}
-            className="flex-1 bg-black text-white py-3.5 px-2 rounded-none font-display font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-1.5 disabled:bg-gray-200 disabled:text-gray-400 transition-all shadow-md active:scale-95"
+            className="flex-1 relative overflow-hidden bg-gradient-to-r from-[#111827] to-[#1f2937] text-white py-3 px-3 rounded-xl font-display font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-1.5 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 transition-all active:scale-95 shadow-[0_4px_14px_rgba(0,0,0,0.3)] disabled:shadow-none"
             id="mobile-buy-now"
           >
             {isOutOfStock ? (
