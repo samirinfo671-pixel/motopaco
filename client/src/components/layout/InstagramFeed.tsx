@@ -15,7 +15,7 @@ interface InstagramPost {
 const FALLBACK_POSTS: InstagramPost[] = [
   {
     id: "1",
-    imageUrl: "/uploads/instagram-1.png",
+    imageUrl: "/uploads/social-1.png",
     link: "https://www.instagram.com/moto__paco/",
     caption: "Le casque AGV K6 S Carbon, ultra léger et résistant. Parfait pour vos sorties sportives et roadtrips au Maroc ! 🏍️🇲🇦 #AGV #AGVK6S #MotoPaco",
     likes: 248,
@@ -23,7 +23,7 @@ const FALLBACK_POSTS: InstagramPost[] = [
   },
   {
     id: "2",
-    imageUrl: "/uploads/instagram-2.png",
+    imageUrl: "/uploads/social-2.png",
     link: "https://www.instagram.com/moto__paco/",
     caption: "Style et sécurité avec le blouson cuir Dainese Racing 4. Venez l'essayer dans notre showroom ! 🏍️✨ #Dainese #DaineseCrew #MotoPaco #EquipementMotard",
     likes: 194,
@@ -31,7 +31,7 @@ const FALLBACK_POSTS: InstagramPost[] = [
   },
   {
     id: "3",
-    imageUrl: "/uploads/instagram-3.png",
+    imageUrl: "/uploads/social-3.png",
     link: "https://www.instagram.com/moto__paco/",
     caption: "Notre showroom est prêt pour vous accueillir avec les meilleures marques d'équipement motard au Maroc ! 🏪🏍️ #MotoPaco #SharkHelmets #Shoei #AGV #Alpinestars",
     likes: 312,
@@ -39,7 +39,7 @@ const FALLBACK_POSTS: InstagramPost[] = [
   },
   {
     id: "4",
-    imageUrl: "/uploads/instagram-4.png",
+    imageUrl: "/uploads/social-4.png",
     link: "https://www.instagram.com/moto__paco/",
     caption: "Rien ne vaut une virée dans les routes de l'Atlas marocain. Équipez-vous pour l'aventure ! 🏔️🏍️ #AtlasMorocco #Roadtrip #Yamaha #Tenere #MotoPaco",
     likes: 420,
@@ -47,7 +47,7 @@ const FALLBACK_POSTS: InstagramPost[] = [
   },
   {
     id: "5",
-    imageUrl: "/uploads/instagram-5.png",
+    imageUrl: "/uploads/social-5.png",
     link: "https://www.instagram.com/moto__paco/",
     caption: "Libérez la puissance et le son de votre machine avec les lignes d'échappement complètes Akrapovič. 🔊🔥 #Akrapovic #Tmax560 #AkrapovicSound #MotoPaco",
     likes: 287,
@@ -55,7 +55,7 @@ const FALLBACK_POSTS: InstagramPost[] = [
   },
   {
     id: "6",
-    imageUrl: "/uploads/instagram-6.png",
+    imageUrl: "/uploads/social-6.png",
     link: "https://www.instagram.com/moto__paco/",
     caption: "Les bottes TCX RT-Race et les gants Dainese Carbon : le combo idéal pour la piste et la route. 🏁🧤 #TCXBoots #Dainese #RacingGear #MotoPaco",
     likes: 165,

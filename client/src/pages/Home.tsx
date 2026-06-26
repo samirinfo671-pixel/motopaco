@@ -399,80 +399,76 @@ export const Home: React.FC = () => {
             
             {/* Casques Banner */}
             <Link to="/categorie/casques-moto" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-casques.png" alt="Casques Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src="/uploads/cat-casques.png" alt="Casques Promo" className="absolute inset-0 sm:left-auto sm:right-0 w-full sm:w-[65%] h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
               <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
-              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
-                <div className="space-y-0.5 sm:space-y-1">
-                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">CASQUES</h3>
-                  <div className="flex items-baseline gap-1 sm:gap-2">
-                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-50%</span>
+              <div className="hidden sm:flex relative z-20 p-5 flex-col justify-between h-full w-[55%]">
+                <div className="space-y-1">
+                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">CASQUES</h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-50%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
 
             {/* Vestes Banner */}
             <Link to="/categorie/jackets" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-vestes.png" alt="Vestes Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src="/uploads/cat-vestes.png" alt="Vestes Promo" className="absolute inset-0 sm:left-auto sm:right-0 w-full sm:w-[65%] h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
               <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
-              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
-                <div className="space-y-0.5 sm:space-y-1">
-                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">VESTES</h3>
-                  <div className="flex items-baseline gap-1 sm:gap-2">
-                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-60%</span>
+              <div className="hidden sm:flex relative z-20 p-5 flex-col justify-between h-full w-[55%]">
+                <div className="space-y-1">
+                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">VESTES</h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-60%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
 
             {/* Gants Banner */}
             <Link to="/categorie/gants-moto" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-gants.png" alt="Gants Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src="/uploads/cat-gants.png" alt="Gants Promo" className="absolute inset-0 sm:left-auto sm:right-0 w-full sm:w-[65%] h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
               <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
-              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
-                <div className="space-y-0.5 sm:space-y-1">
-                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">GANTS</h3>
-                  <div className="flex items-baseline gap-1 sm:gap-2">
-                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-40%</span>
+              <div className="hidden sm:flex relative z-20 p-5 flex-col justify-between h-full w-[55%]">
+                <div className="space-y-1">
+                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">GANTS</h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-40%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
 
             {/* Antivols Banner */}
             <Link to="/boutique?search=antivol" className="relative block overflow-hidden rounded-xl bg-black group h-28 sm:h-36 border border-gray-100/10 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <img src="/uploads/cat-antivols.png" alt="Antivols Promo" className="absolute right-0 top-0 h-full w-full sm:w-[65%] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <img src="/uploads/cat-antivols.png" alt="Antivols Promo" className="absolute inset-0 sm:left-auto sm:right-0 w-full sm:w-[65%] h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-10"></div>
               <div className="hidden sm:block absolute left-0 top-0 h-full w-[55%] bg-[#1c1c1c] z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
-              <div className="block sm:hidden absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20 z-10"></div>
-              <div className="relative z-20 p-4 sm:p-5 flex flex-col justify-between h-full w-full sm:w-[55%]">
-                <div className="space-y-0.5 sm:space-y-1">
-                  <h3 className="font-display font-black text-xs sm:text-lg italic text-white uppercase tracking-wider">ANTIVOLS</h3>
-                  <div className="flex items-baseline gap-1 sm:gap-2">
-                    <span className="text-[8px] sm:text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
-                    <span className="text-base sm:text-2xl font-black text-[#E63012] italic tracking-wide">-30%</span>
+              <div className="hidden sm:flex relative z-20 p-5 flex-col justify-between h-full w-[55%]">
+                <div className="space-y-1">
+                  <h3 className="font-display font-black text-lg italic text-white uppercase tracking-wider">ANTIVOLS</h3>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[9px] text-gray-400 font-extrabold tracking-wider">JUSQU'À</span>
+                    <span className="text-2xl font-black text-[#E63012] italic tracking-wide">-30%</span>
                   </div>
                 </div>
-                <div className="flex items-center text-white text-[8px] sm:text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-1 sm:mt-2">
-                  DÉCOUVRIR <ArrowRight className="w-3 h-3.5 sm:w-3.5 sm:h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                <div className="flex items-center text-white text-[9px] font-black uppercase tracking-widest gap-1 group-hover:text-[#E63012] transition-colors mt-2">
+                  DÉCOUVRIR <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
@@ -502,7 +498,7 @@ export const Home: React.FC = () => {
                 <Link
                   key={cat.name}
                   to={linkTo}
-                  className="flex items-center gap-4 bg-white border border-gray-100 border-l-[3px] border-l-[#E63012] sm:border-l-gray-100 hover:border-[#E63012]/30 p-3.5 rounded-xl hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-300 group"
+                  className="flex items-center gap-4 bg-white border border-gray-100 border-l-[3px] border-l-[#E63012] hover:border-[#E63012]/30 p-3.5 rounded-xl hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-300 group"
                 >
                   <div className="w-12 h-12 rounded-full bg-[#F9FAFB] border border-gray-100/80 flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 group-hover:bg-red-50/30 transition-all duration-300">
                     {typeof iconObj === 'string' ? (
@@ -535,13 +531,13 @@ export const Home: React.FC = () => {
           
           {/* Section Header: Tabs — mobile: stacked centered, desktop: full divider */}
           <div className="mb-6 sm:mb-8">
-            {/* Mobile Tab Bar */}
-            <div className="flex justify-center gap-3 sm:hidden mb-4 px-1">
+            {/* Unified Skewed Tab Bar */}
+            <div className="flex justify-center gap-3 md:gap-4 max-w-sm sm:max-w-md mx-auto mb-6 px-1">
               <button
                 onClick={() => setActiveTab('bestsellers')}
-                className={`flex-1 py-3 text-[12px] font-black uppercase italic tracking-wider transition-all skew-x-[-10deg] ${
+                className={`flex-1 py-3.5 text-[12px] md:text-[14px] font-black uppercase italic tracking-wider transition-all skew-x-[-10deg] ${
                   activeTab === 'bestsellers' 
-                    ? 'bg-[#E63012] text-white shadow-[0_4px_12px_rgba(230,48,18,0.3)]' 
+                    ? 'bg-[#E63012] text-white shadow-[0_4px_12px_rgba(230,48,18,0.3)] scale-105' 
                     : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}
               >
@@ -549,41 +545,14 @@ export const Home: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('new')}
-                className={`flex-1 py-3 text-[12px] font-black uppercase italic tracking-wider transition-all skew-x-[-10deg] ${
+                className={`flex-1 py-3.5 text-[12px] md:text-[14px] font-black uppercase italic tracking-wider transition-all skew-x-[-10deg] ${
                   activeTab === 'new' 
-                    ? 'bg-[#E63012] text-white shadow-[0_4px_12px_rgba(230,48,18,0.3)]' 
+                    ? 'bg-[#E63012] text-white shadow-[0_4px_12px_rgba(230,48,18,0.3)] scale-105' 
                     : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}
               >
                 <span className="inline-block skew-x-[10deg]">NOUVEAUTÉS</span>
               </button>
-            </div>
-            {/* Desktop Full Header with dividers */}
-            <div className="hidden sm:flex items-center justify-center overflow-hidden">
-              <div className="flex-1 h-px bg-gray-300"></div>
-              <div className="w-1 h-[22px] bg-[#E63012] ml-4 mr-3"></div>
-              <div className="flex gap-6">
-                <button
-                  onClick={() => setActiveTab('bestsellers')}
-                  className={`text-[17px] font-black uppercase italic tracking-wide transition-all relative pb-1 ${
-                    activeTab === 'bestsellers' ? 'text-[#111]' : 'text-gray-400 hover:text-gray-600'
-                  }`}
-                >
-                  TOP VENTES
-                  {activeTab === 'bestsellers' && <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#E63012]" />}
-                </button>
-                <button
-                  onClick={() => setActiveTab('new')}
-                  className={`text-[17px] font-black uppercase italic tracking-wide transition-all relative pb-1 ${
-                    activeTab === 'new' ? 'text-[#111]' : 'text-gray-400 hover:text-gray-600'
-                  }`}
-                >
-                  LES NOUVEAUTÉS
-                  {activeTab === 'new' && <span className="absolute bottom-0 left-0 w-full h-[3px] bg-[#E63012]" />}
-                </button>
-              </div>
-              <div className="w-1 h-[22px] bg-[#E63012] ml-3 mr-4"></div>
-              <div className="flex-1 h-px bg-gray-300"></div>
             </div>
           </div>
 
@@ -703,28 +672,9 @@ export const Home: React.FC = () => {
             <div className="flex-1 h-px bg-gray-300"></div>
           </div>
 
-          {/* Dynamic brand logo grid with hover effect — hidden on mobile */}
-          <div className="hidden md:grid grid-cols-4 lg:grid-cols-9 gap-3.5 items-center justify-items-center">
-            {Object.entries(brandSVGs).map(([name, LogoComponent]) => {
-              const slug = name === '100%' ? '100-percent' : name.toLowerCase().replace(/\s+/g, '-');
-              return (
-                <Link
-                  key={name}
-                  to={`/boutique?brand=${slug}`}
-                  className="w-full flex flex-col items-center justify-center p-4 border border-gray-200/60 rounded-xl hover:border-[#E63012] hover:shadow-xl hover:-translate-y-1 group transition-all duration-300 h-24 bg-[#F9FAFB]/40 hover:bg-white"
-                >
-                  <div className="text-gray-400 group-hover:text-[#E63012] transition-all duration-300 transform group-hover:scale-105 mb-1 flex items-center justify-center">
-                    <LogoComponent />
-                  </div>
-                  <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-gray-400 group-hover:text-[#111] transition-colors">{name}</span>
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Mobile Brands Loop (Visible only on mobile/tablet) */}
-          <div className="block md:hidden overflow-hidden relative w-full py-4 border-y border-gray-100 bg-[#F9FAFB]/40">
-            <div className="animate-brand-loop flex gap-12 items-center">
+          {/* Brands Loop (Motorsport Infinite Marquee on all devices) */}
+          <div className="overflow-hidden relative w-full py-6 border-y border-gray-100 bg-[#F9FAFB]/40">
+            <div className="animate-brand-loop flex gap-12 md:gap-20 items-center">
               {/* Render twice for seamless looping */}
               {[...Object.entries(brandSVGs), ...Object.entries(brandSVGs)].map(([name, LogoComponent], idx) => {
                 const slug = name === '100%' ? '100-percent' : name.toLowerCase().replace(/\s+/g, '-');
@@ -732,10 +682,10 @@ export const Home: React.FC = () => {
                   <Link
                     key={`${name}-${idx}`}
                     to={`/boutique?brand=${slug}`}
-                    className="flex flex-col items-center justify-center flex-shrink-0 w-24 text-gray-400 hover:text-[#E63012] transition-colors"
+                    className="flex flex-col items-center justify-center flex-shrink-0 w-24 md:w-32 text-gray-400 hover:text-[#E63012] transition-colors"
                   >
                     <LogoComponent />
-                    <span className="text-[8px] font-mono font-black uppercase tracking-wider mt-1 text-gray-400/80">{name}</span>
+                    <span className="text-[8px] md:text-[9px] font-mono font-black uppercase tracking-wider mt-1.5 text-gray-400/80">{name}</span>
                   </Link>
                 );
               })}
