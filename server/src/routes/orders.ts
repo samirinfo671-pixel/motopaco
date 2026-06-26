@@ -228,10 +228,18 @@ router.get('/:orderNumber', (req, res) => {
   try {
     const order = db.prepare(`
       SELECT * FROM orders 
-      WHERE order_number = ? AND (shipping_phone = ? OR shipping_phone LIKE ?)
-    `).get(orderNumber, phone, `%${phone}`) as any;
+      WHERE order_number = ?
+    `).get(orderNumber) as any;
 
     if (!order) {
+      return res.status(404).json({ message: 'Aucune commande trouvée correspondante.' });
+    }
+
+    const cleanOrderPhone = String(order.shipping_phone).replace(/\D/g, '');
+    const cleanInputPhone = String(phone).replace(/\D/g, '');
+    
+    const isPhoneMatch = cleanOrderPhone.endsWith(cleanInputPhone) || cleanInputPhone.endsWith(cleanOrderPhone);
+    if (!isPhoneMatch) {
       return res.status(404).json({ message: 'Aucune commande trouvée correspondante.' });
     }
 
