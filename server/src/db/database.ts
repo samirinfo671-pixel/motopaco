@@ -235,6 +235,27 @@ try {
   // Ignore if column already exists
 }
 
+// Migration: Add is_out_of_stock to products table
+try {
+  db.prepare('ALTER TABLE products ADD COLUMN is_out_of_stock INTEGER DEFAULT 0').run();
+  console.log('[DB] Migration: added is_out_of_stock column to products.');
+} catch (error: any) {
+  // Ignore if column already exists
+}
+
+// Recalculate is_out_of_stock based on variant stock (0 means out of stock)
+try {
+  const updateStmt = db.prepare(`
+    UPDATE products SET is_out_of_stock = (
+      CASE WHEN (SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_id = products.id) = 0 THEN 1 ELSE 0 END
+    )
+  `);
+  updateStmt.run();
+  console.log('[DB] Recalculated is_out_of_stock flag for all products from variant stock.');
+} catch (e) {
+  console.error('[DB] Failed to recalculate is_out_of_stock:', e);
+}
+
 try {
   db.prepare('ALTER TABLE products ADD COLUMN is_bestseller INTEGER DEFAULT 0').run();
   console.log('[DB] Migration: added is_bestseller column to products.');
