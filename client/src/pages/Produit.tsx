@@ -161,8 +161,12 @@ export const Produit: React.FC = () => {
   }
 
   const hasNoVariants = !product.variants || product.variants.length === 0;
-  const allVariantsOutOfStock = product.variants ? product.variants.every(v => v.stock === 0) : true;
-  const isOutOfStock = product.is_out_of_stock === 1 || hasNoVariants || allVariantsOutOfStock || (selectedVariant ? selectedVariant.stock === 0 : true);
+  const allVariantsOutOfStock = !hasNoVariants && product.variants!.every(v => v.stock === 0);
+  // Only flag out-of-stock if DB explicitly says so, ALL variants are 0, or the selected variant is 0.
+  // Never mark OOS just because variants are missing/not-yet-loaded.
+  const isOutOfStock = product.is_out_of_stock === 1
+    || allVariantsOutOfStock
+    || (selectedVariant ? selectedVariant.stock === 0 : false);
   const isLowStock = selectedVariant ? selectedVariant.stock > 0 && selectedVariant.stock <= 5 : false;
 
   const productSchema = {

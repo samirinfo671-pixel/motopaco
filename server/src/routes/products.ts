@@ -130,10 +130,21 @@ const CATEGORY_SLUG_MAP: Record<string, string> = {
       const totalStock = db.prepare('SELECT SUM(stock) as stock FROM product_variants WHERE product_id = ?').get(p.id) as { stock: number } | undefined;
       const avgRating = db.prepare('SELECT AVG(rating) as rating, COUNT(*) as count FROM reviews WHERE product_id = ?').get(p.id) as { rating: number | null; count: number } | undefined;
 
+      // If explicitly out of stock, show 0. If no variants at all but not OOS-flagged, default to 10 (in stock)
+      let computedStock = 0;
+      if (p.is_out_of_stock === 1) {
+        computedStock = 0;
+      } else if (totalStock && totalStock.stock > 0) {
+        computedStock = totalStock.stock;
+      } else if (!totalStock || totalStock.stock === 0) {
+        // No variants in DB but not explicitly OOS — treat as in stock
+        computedStock = 10;
+      }
+
       return {
         ...p,
         primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
-        total_stock: p.is_out_of_stock === 1 ? 0 : (totalStock ? totalStock.stock || 0 : 0),
+        total_stock: computedStock,
         rating: avgRating && avgRating.rating ? Math.round(avgRating.rating * 10) / 10 : 0,
         review_count: avgRating ? avgRating.count : 0
       };
@@ -172,11 +183,11 @@ router.get('/featured', (req, res) => {
       const primaryImage = db.prepare('SELECT url FROM product_images WHERE product_id = ? AND is_primary = 1').get(p.id) as { url: string } | undefined;
       const totalStock = db.prepare('SELECT SUM(stock) as stock FROM product_variants WHERE product_id = ?').get(p.id) as { stock: number } | undefined;
       const avgRating = db.prepare('SELECT AVG(rating) as rating, COUNT(*) as count FROM reviews WHERE product_id = ?').get(p.id) as { rating: number | null; count: number } | undefined;
-
+      const computedStock = p.is_out_of_stock === 1 ? 0 : (totalStock && totalStock.stock > 0 ? totalStock.stock : 10);
       return {
         ...p,
         primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
-        total_stock: p.is_out_of_stock === 1 ? 0 : (totalStock ? totalStock.stock || 0 : 0),
+        total_stock: computedStock,
         rating: avgRating && avgRating.rating ? Math.round(avgRating.rating * 10) / 10 : 0,
         review_count: avgRating ? avgRating.count : 0
       };
@@ -207,11 +218,11 @@ router.get('/new-arrivals', (req, res) => {
       const primaryImage = db.prepare('SELECT url FROM product_images WHERE product_id = ? AND is_primary = 1').get(p.id) as { url: string } | undefined;
       const totalStock = db.prepare('SELECT SUM(stock) as stock FROM product_variants WHERE product_id = ?').get(p.id) as { stock: number } | undefined;
       const avgRating = db.prepare('SELECT AVG(rating) as rating, COUNT(*) as count FROM reviews WHERE product_id = ?').get(p.id) as { rating: number | null; count: number } | undefined;
-
+      const computedStock = p.is_out_of_stock === 1 ? 0 : (totalStock && totalStock.stock > 0 ? totalStock.stock : 10);
       return {
         ...p,
         primary_image: primaryImage ? primaryImage.url : 'https://picsum.photos/seed/default/600/600',
-        total_stock: p.is_out_of_stock === 1 ? 0 : (totalStock ? totalStock.stock || 0 : 0),
+        total_stock: computedStock,
         rating: avgRating && avgRating.rating ? Math.round(avgRating.rating * 10) / 10 : 0,
         review_count: avgRating ? avgRating.count : 0
       };
@@ -255,6 +266,22 @@ router.get('/:slug', (req, res) => {
 
     if (product.is_out_of_stock === 1) {
       variants = variants.map(v => ({ ...v, stock: 0 }));
+    }
+
+    // If no variants exist (e.g. old seed data), inject a synthetic in-stock variant
+    // so the frontend never incorrectly shows "Rupture de stock"
+    if (variants.length === 0 && product.is_out_of_stock !== 1) {
+      variants = [{
+        id: 0,
+        product_id: product.id,
+        size: 'Taille Unique',
+        color: 'Standard',
+        sku: `${product.slug}-default`,
+        stock: 10,
+        low_stock_threshold: 3,
+        image_url: null,
+        description: 'Variante standard'
+      }];
     }
 
     // Fetch average rating
