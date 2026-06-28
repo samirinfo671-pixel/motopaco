@@ -107,18 +107,28 @@ export const Commande: React.FC = () => {
       return;
     }
 
-    // Normalize phone number: strip spaces, hyphens, parentheses, and plus sign
-    const cleanedPhone = phone.trim().replace(/[\s\-\(\)\+]+/g, '');
+    // Normalize phone number: strip all non-digit characters
+    const digitsOnly = phone.trim().replace(/\D/g, '');
 
-    // Permissive check for Moroccan numbers:
-    // - starting with 0 followed by 5, 6, 7, 8 and 8 digits (10 digits total)
-    // - starting with 212 followed by 5, 6, 7, 8 and 8 digits (11 digits total)
-    // - starting with 00212 followed by 5, 6, 7, 8 and 8 digits (13 digits total)
-    const phoneRegex = /^(?:0|212|00212)[5678]\d{8}$/;
-    if (!phoneRegex.test(cleanedPhone)) {
+    // Normalize Moroccan phone number: extract core 9-digit suffix (starts with 5, 6, 7, or 8)
+    let corePhone = digitsOnly;
+    if (corePhone.startsWith('00212')) {
+      corePhone = corePhone.slice(5);
+    } else if (corePhone.startsWith('212')) {
+      corePhone = corePhone.slice(3);
+    } else if (corePhone.startsWith('0')) {
+      corePhone = corePhone.slice(1);
+    }
+
+    // A valid Moroccan mobile or landline has exactly 9 digits after country/prefix normalization
+    const isMoroccanPhone = /^[5678]\d{8}$/.test(corePhone);
+    if (!isMoroccanPhone) {
       setValidationError('Numéro de téléphone invalide. Utilisez un format marocain (ex: 0612345678 ou +212612345678).');
       return;
     }
+
+    // Keep the normalized format starting with 0 (e.g. 0612345678) for database compatibility
+    const cleanedPhone = '0' + corePhone;
 
 
 
