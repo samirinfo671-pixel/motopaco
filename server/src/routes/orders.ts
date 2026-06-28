@@ -238,7 +238,12 @@ router.get('/:orderNumber', (req, res) => {
     const cleanOrderPhone = String(order.shipping_phone).replace(/\D/g, '');
     const cleanInputPhone = String(phone).replace(/\D/g, '');
     
-    const isPhoneMatch = cleanOrderPhone.endsWith(cleanInputPhone) || cleanInputPhone.endsWith(cleanOrderPhone);
+    // In Morocco, mobile phone numbers have 9 digits after the leading 0 or country code (e.g., 612345678).
+    // Compare the last 9 digits of both numbers to ensure we match correctly regardless of leading 0 or 212/+212 prefix.
+    const orderLast9 = cleanOrderPhone.slice(-9);
+    const inputLast9 = cleanInputPhone.slice(-9);
+    
+    const isPhoneMatch = orderLast9 === inputLast9 || cleanOrderPhone.endsWith(cleanInputPhone) || cleanInputPhone.endsWith(cleanOrderPhone);
     if (!isPhoneMatch) {
       return res.status(404).json({ message: 'Aucune commande trouvée correspondante.' });
     }

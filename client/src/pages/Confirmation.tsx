@@ -41,6 +41,8 @@ export const Confirmation: React.FC = () => {
     );
   }
 
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
   const { settings } = useSettingsStore();
   const phoneVal = settings.whatsapp_number || '212667389916';
   
@@ -78,6 +80,21 @@ export const Confirmation: React.FC = () => {
 
   const waUrl = `https://wa.me/${phoneVal}?text=${encodeURIComponent(messageText)}`;
 
+  useEffect(() => {
+    if (order) {
+      const sessionKey = `wa_redirect_${order.order_number}`;
+      const alreadyRedirected = sessionStorage.getItem(sessionKey);
+      if (!alreadyRedirected) {
+        setIsRedirecting(true);
+        sessionStorage.setItem(sessionKey, 'true');
+        const timer = setTimeout(() => {
+          window.location.href = waUrl;
+        }, 1500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [order, waUrl]);
+
   // Determine active status tracking steps
   const getStatusStep = (status: string) => {
     switch (status) {
@@ -102,7 +119,7 @@ export const Confirmation: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Top visual success badge */}
-        <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded p-8 text-center space-y-4">
+        <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded p-8 text-center space-y-4 flex flex-col items-center">
           <CheckCircle2 className="w-16 h-16 text-[#22C55E] mx-auto animate-pulse" />
           <h1 className="race-livery text-2xl sm:text-4xl text-[#111827]">COMMANDE VALIDÉE !</h1>
           <p className="text-sm text-[#4B5563] max-w-md mx-auto leading-relaxed font-body">
@@ -111,6 +128,13 @@ export const Confirmation: React.FC = () => {
           <p className="font-mono text-lg font-bold text-[#E63012] bg-[#F9FAFB] inline-block px-4 py-2 border border-[#E5E7EB] rounded">
             {orderNumber}
           </p>
+
+          {isRedirecting && (
+            <div className="mt-2 text-xs font-black uppercase tracking-wider text-green-600 bg-green-50 px-4 py-2 border border-green-200 rounded flex items-center space-x-2 animate-pulse">
+              <span className="animate-spin rounded-full h-3.5 w-3.5 border-t-2 border-green-600 border-r-2 border-transparent"></span>
+              <span>Redirection vers WhatsApp en cours...</span>
+            </div>
+          )}
 
           {/* Beautiful Alert/Notice Card */}
           <div className="my-6 bg-[#FFF5F5] border-l-4 border-[#E63012] rounded-r p-6 max-w-xl mx-auto text-left flex items-start space-x-4 shadow-sm">
