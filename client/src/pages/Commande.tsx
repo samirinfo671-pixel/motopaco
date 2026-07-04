@@ -65,6 +65,7 @@ export const Commande: React.FC = () => {
 
   // Checkout flow state
   const [paymentMethod] = useState<'cod'>('cod');
+  const [isSuccess, setIsSuccess] = useState(false);
   
   const [validationError, setValidationError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,13 +77,13 @@ export const Commande: React.FC = () => {
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !isSuccess) {
       navigate('/panier');
-    } else {
+    } else if (items.length > 0) {
       // Trigger Initiate Checkout Pixel event
       trackInitiateCheckout(total, items.length);
     }
-  }, [items, navigate]);
+  }, [items, navigate, isSuccess]);
 
   // If the active delivery method is express (from a previous session), fallback to standard
   useEffect(() => {
@@ -165,6 +166,9 @@ export const Commande: React.FC = () => {
         items: items
       });
 
+
+      // Set success flag to prevent empty cart redirect
+      setIsSuccess(true);
 
       // Clear shopping cart
       clearCart();
