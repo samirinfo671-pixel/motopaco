@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { CheckCircle2, Package, Truck, Compass, PhoneCall } from 'lucide-react';
+import { CheckCircle2, Package, Truck, Compass, PhoneCall, MapPin, User, Phone, ShoppingBag } from 'lucide-react';
 import api from '../lib/api.ts';
 import { Order } from '../types/order.ts';
 import { formatPrice } from '../lib/formatters.ts';
 import SEOHead from '../components/seo/SEOHead.tsx';
 import { useSettingsStore } from '../store/settings.ts';
+import { ProductImg } from '../components/product/ProductImg.tsx';
 
 export const Confirmation: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -32,16 +33,6 @@ export const Confirmation: React.FC = () => {
     };
     fetchOrderDetails();
   }, [orderNumber, phone]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#F9FAFB] pt-32 pb-16 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#E63012]"></div>
-      </div>
-    );
-  }
-
-  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const { settings } = useSettingsStore();
   const phoneVal = settings.whatsapp_number || '212667389916';
@@ -80,21 +71,6 @@ export const Confirmation: React.FC = () => {
 
   const waUrl = `https://wa.me/${phoneVal}?text=${encodeURIComponent(messageText)}`;
 
-  useEffect(() => {
-    if (order) {
-      const sessionKey = `wa_redirect_${order.order_number}`;
-      const alreadyRedirected = sessionStorage.getItem(sessionKey);
-      if (!alreadyRedirected) {
-        setIsRedirecting(true);
-        sessionStorage.setItem(sessionKey, 'true');
-        const timer = setTimeout(() => {
-          window.location.href = waUrl;
-        }, 1500);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [order, waUrl]);
-
   // Determine active status tracking steps
   const getStatusStep = (status: string) => {
     switch (status) {
@@ -109,6 +85,14 @@ export const Confirmation: React.FC = () => {
 
   const currentStep = order ? getStatusStep(order.status) : 1;
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F9FAFB] pt-32 pb-16 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#E63012]"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F9FAFB] pt-28 pb-16 text-[#111827]">
       <SEOHead
@@ -116,158 +100,224 @@ export const Confirmation: React.FC = () => {
         description="Votre commande est confirmée chez MOTO PACO. Suivez son état ou contactez-nous via WhatsApp."
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Top visual success badge */}
-        <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded p-8 text-center space-y-4 flex flex-col items-center">
-          <CheckCircle2 className="w-16 h-16 text-[#22C55E] mx-auto animate-pulse" />
-          <h1 className="race-livery text-2xl sm:text-4xl text-[#111827]">COMMANDE VALIDÉE !</h1>
-          <p className="text-sm text-[#4B5563] max-w-md mx-auto leading-relaxed font-body">
-            Merci pour votre confiance. Votre commande a été enregistrée avec succès sous le numéro :
+        <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl p-8 text-center space-y-4 flex flex-col items-center shadow-sm relative overflow-hidden">
+          {/* Subtle red accent bar at top */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#E63012]"></div>
+          
+          <div className="p-3 bg-green-50 rounded-full text-green-500 animate-bounce">
+            <CheckCircle2 className="w-16 h-16" />
+          </div>
+          
+          <h1 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-[#111827]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Merci pour votre commande !
+          </h1>
+          <p className="text-sm text-[#4B5563] max-w-lg mx-auto leading-relaxed">
+            Votre commande a été validée avec succès. Nous préparons déjà son expédition.
           </p>
-          <p className="font-mono text-lg font-bold text-[#E63012] bg-[#F9FAFB] inline-block px-4 py-2 border border-[#E5E7EB] rounded">
-            {orderNumber}
-          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Numéro de Commande :</span>
+            <span className="font-mono text-base font-black text-[#E63012] bg-[#F9FAFB] px-4 py-2 border border-[#E5E7EB] rounded-lg">
+              #{orderNumber}
+            </span>
+          </div>
 
-          {isRedirecting && (
-            <div className="mt-2 text-xs font-black uppercase tracking-wider text-green-600 bg-green-50 px-4 py-2 border border-green-200 rounded flex items-center space-x-2 animate-pulse">
-              <span className="animate-spin rounded-full h-3.5 w-3.5 border-t-2 border-green-600 border-r-2 border-transparent"></span>
-              <span>Redirection vers WhatsApp en cours...</span>
-            </div>
-          )}
-
-          {/* Beautiful Alert/Notice Card */}
-          <div className="my-6 bg-[#FFF5F5] border-l-4 border-[#E63012] rounded-r p-6 max-w-xl mx-auto text-left flex items-start space-x-4 shadow-sm">
-            <div className="p-2 rounded-full bg-[#E63012]/10 text-[#E63012] shrink-0 mt-0.5 animate-pulse">
-              <PhoneCall className="w-5 h-5" />
+          {/* Quick Notice Card */}
+          <div className="mt-6 bg-[#FFF5F5] border-l-4 border-[#E63012] rounded-r-xl p-5 max-w-2xl mx-auto text-left flex items-start space-x-4">
+            <div className="p-2 rounded-lg bg-[#E63012]/10 text-[#E63012] shrink-0 mt-0.5 animate-pulse">
+              <PhoneCall className="w-4 h-4" />
             </div>
             <div className="space-y-1">
-              <h4 className="font-display font-black text-xs tracking-wider text-[#E63012] uppercase">Confirmation Téléphonique Requise</h4>
-              <p className="text-xs text-[#5C3E3E] font-medium leading-relaxed font-body">
-                Notre service client va vous appeler par téléphone dans quelques instants pour confirmer votre adresse et valider la livraison. <strong>Veuillez rester à proximité de votre téléphone et répondre à notre appel.</strong>
+              <h4 className="font-bold text-xs tracking-wider text-[#E63012] uppercase">Confirmation Téléphonique Requise</h4>
+              <p className="text-xs text-[#5C3E3E] font-semibold leading-relaxed">
+                Notre service client va vous appeler par téléphone dans quelques instants pour confirmer votre adresse et valider la livraison. **Veuillez rester à proximité de votre téléphone et répondre à notre appel.**
               </p>
             </div>
           </div>
-
-          <div className="pt-2">
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#22C55E] hover:bg-[#1eb052] text-white px-8 py-4 rounded font-display text-xs font-black uppercase tracking-wider inline-flex items-center space-x-2 transition-colors shadow-lg border border-[#1eb052] hover:scale-[1.02] transform duration-150"
-            >
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.017-5.114-2.871-6.973-1.854-1.859-4.33-2.88-6.967-2.881-5.441 0-9.869 4.42-9.873 9.863-.001 1.701.45 3.361 1.307 4.8l-.348 1.272.368-.345zm1.183-11.785c-.214-.478-.44-.488-.642-.496-.166-.007-.356-.007-.547-.007-.19 0-.5.07-.762.356-.262.285-1 .978-1 2.387 0 1.41 1.025 2.775 1.168 2.966.143.19 2.016 3.078 4.885 4.318.682.295 1.215.47 1.629.601.685.218 1.31.187 1.803.113.55-.082 1.688-.69 1.925-1.356.238-.666.238-1.238.167-1.356-.07-.119-.262-.19-.548-.333-.285-.143-1.688-.833-1.95-.928-.261-.095-.452-.143-.642.143-.19.285-.737.928-.904 1.119-.166.19-.333.214-.618.07-.285-.143-1.205-.444-2.296-1.417-.848-.756-1.421-1.69-1.587-1.976-.167-.285-.018-.44.125-.58.127-.127.285-.333.428-.5.143-.166.19-.285.285-.476.095-.19.048-.356-.024-.5-.071-.143-.642-1.547-.88-2.12z" />
-              </svg>
-              <span>Envoyer ma commande sur WhatsApp</span>
-            </a>
-          </div>
         </div>
 
-        {/* Step-by-Step Tracking Status Panel */}
-        {order && (
-          <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded p-6 sm:p-8 space-y-6">
-            <h3 className="font-display font-black italic text-lg uppercase tracking-wide text-[#111827] border-b border-[#E5E7EB] pb-3 flex items-center space-x-2">
-              <Truck className="w-5 h-5 text-[#E63012]" />
-              <span>État de livraison</span>
-            </h3>
+        {/* Dynamic Details Layout Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          
+          {/* LEFT COLUMN: Order Items + Status (8 cols) */}
+          <div className="md:col-span-8 space-y-8">
+            
+            {/* Step-by-Step Tracking Status Panel */}
+            {order && (
+              <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+                <h3 className="font-bold text-base uppercase tracking-wider text-[#111827] border-b border-[#E5E7EB]/80 pb-3 flex items-center space-x-2">
+                  <Truck className="w-5 h-5 text-[#E63012]" />
+                  <span>Suivi de Livraison</span>
+                </h3>
 
-            {/* Steps line */}
-            <div className="grid grid-cols-5 text-center text-[9px] sm:text-xs font-bold relative pt-6">
-              {/* Connecting line */}
-              <div className="absolute top-9 left-[10%] right-[10%] h-0.5 bg-[#E5E7EB] z-0">
-                <div
-                  className="bg-[#E63012] h-0.5 transition-all duration-700"
-                  style={{ width: `${((currentStep - 1) / 4) * 100}%` }}
-                ></div>
-              </div>
-
-              {/* Step dots */}
-              {[
-                { label: 'Reçue', stepNum: 1 },
-                { label: 'Confirmée', stepNum: 2 },
-                { label: 'Préparation', stepNum: 3 },
-                { label: 'Expédiée', stepNum: 4 },
-                { label: 'Livrée', stepNum: 5 }
-              ].map((st) => (
-                <div key={st.stepNum} className="flex flex-col items-center z-10 relative">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border transition-colors ${
-                    currentStep >= st.stepNum 
-                      ? 'bg-[#E63012] border-[#E63012] text-white' 
-                      : 'bg-[#FFFFFF] border-[#E5E7EB] text-[#4B5563]'
-                  }`}>
-                    {st.stepNum}
+                <div className="grid grid-cols-5 text-center text-[9px] sm:text-xs font-bold relative pt-6">
+                  {/* Connecting line */}
+                  <div className="absolute top-9 left-[10%] right-[10%] h-0.5 bg-[#E5E7EB] z-0">
+                    <div
+                      className="bg-[#E63012] h-0.5 transition-all duration-700"
+                      style={{ width: `${((currentStep - 1) / 4) * 100}%` }}
+                    ></div>
                   </div>
-                  <span className={`mt-2 font-display uppercase tracking-wider ${currentStep >= st.stepNum ? 'text-[#E63012]' : 'text-[#4B5563]'}`}>
-                    {st.label}
-                  </span>
+
+                  {/* Step dots */}
+                  {[
+                    { label: 'Reçue', stepNum: 1 },
+                    { label: 'Confirmée', stepNum: 2 },
+                    { label: 'Préparation', stepNum: 3 },
+                    { label: 'Expédiée', stepNum: 4 },
+                    { label: 'Livrée', stepNum: 5 }
+                  ].map((st) => (
+                    <div key={st.stepNum} className="flex flex-col items-center z-10 relative">
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold border transition-colors ${
+                        currentStep >= st.stepNum 
+                          ? 'bg-[#E63012] border-[#E63012] text-white shadow' 
+                          : 'bg-[#FFFFFF] border-[#E5E7EB] text-[#4B5563]'
+                      }`}>
+                        {st.stepNum}
+                      </div>
+                      <span className={`mt-2 uppercase tracking-wider text-[8px] sm:text-[9px] ${currentStep >= st.stepNum ? 'text-[#E63012]' : 'text-[#4B5563]'}`}>
+                        {st.label}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* Order Items list */}
+            {order && (
+              <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl p-6 sm:p-8 space-y-4 shadow-sm">
+                <h3 className="font-bold text-base uppercase tracking-wider text-[#111827] border-b border-[#E5E7EB]/80 pb-3 flex items-center space-x-2">
+                  <Package className="w-5 h-5 text-[#E63012]" />
+                  <span>Articles Commandés</span>
+                </h3>
+
+                <div className="space-y-4 divide-y divide-[#E5E7EB]/60">
+                  {order.items?.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center pt-4 first:pt-0">
+                      <div className="flex items-center space-x-4">
+                        <ProductImg
+                          src={item.primary_image}
+                          alt={item.product_name}
+                          fallbackText={item.product_name}
+                          className="w-14 h-14 object-contain rounded bg-[#F9FAFB] border border-[#E5E7EB] p-1 flex-shrink-0"
+                        />
+                        <div>
+                          <h4 className="text-sm font-bold text-[#111827] leading-snug">{item.product_name}</h4>
+                          <p className="text-[10px] text-[#4B5563] font-bold uppercase mt-1">Option: {item.variant_label || 'Unique'} | Qté: {item.quantity}</p>
+                        </div>
+                      </div>
+                      <span className="font-mono text-sm font-bold text-[#111827] whitespace-nowrap pl-4">
+                        {formatPrice(item.line_total)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pricing Summary */}
+                <div className="border-t border-[#E5E7EB] pt-4 text-sm space-y-2">
+                  <div className="flex justify-between text-[#4B5563]">
+                    <span>Sous-total</span>
+                    <span className="font-mono font-bold text-[#111827]">{formatPrice(order.subtotal)}</span>
+                  </div>
+                  {order.discount_amount > 0 && (
+                    <div className="flex justify-between text-[#22C55E]">
+                      <span>Remises</span>
+                      <span className="font-mono font-bold">-{formatPrice(order.discount_amount)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-[#4B5563]">
+                    <span>Frais de livraison</span>
+                    <span className="font-mono font-bold text-[#111827]">
+                      {order.shipping_cost === 0 ? 'Gratuit' : formatPrice(order.shipping_cost)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between border-t border-[#E5E7EB] pt-3 text-base font-bold text-[#111827]">
+                    <span>TOTAL À RÉGLER (COD)</span>
+                    <span className="font-mono text-base text-[#E63012]">{formatPrice(order.total)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Order detail checklist panel */}
-        {order && (
-          <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded p-6 sm:p-8 space-y-4">
-            <h3 className="font-display font-black italic text-lg uppercase tracking-wide text-[#111827] border-b border-[#E5E7EB] pb-3 flex items-center space-x-2">
-              <Package className="w-5 h-5 text-[#E63012]" />
-              <span>Détails de la commande</span>
-            </h3>
-
-            <div className="space-y-4 divide-y divide-[#E5E7EB]">
-              {order.items?.map((item) => (
-                <div key={item.id} className="flex justify-between items-center pt-4 first:pt-0">
-                  <div className="flex items-center space-x-3">
-                    {item.primary_image && (
-                      <img src={item.primary_image} alt={item.product_name} referrerPolicy="no-referrer" className="w-12 h-12 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB]" />
-                    )}
+          {/* RIGHT COLUMN: Delivery Info + WhatsApp CTA (4 cols) */}
+          <div className="md:col-span-4 space-y-8">
+            
+            {/* Delivery Details Card */}
+            {order && (
+              <div className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-2xl p-6 shadow-sm space-y-4">
+                <h3 className="font-bold text-sm uppercase tracking-wider text-[#111827] border-b border-[#E5E7EB]/80 pb-3 flex items-center space-x-2">
+                  <MapPin className="w-4 h-4 text-[#E63012]" />
+                  <span>Détails de Livraison</span>
+                </h3>
+                
+                <div className="space-y-4 text-xs font-semibold text-[#4B5563]">
+                  {/* Name */}
+                  <div className="flex items-start space-x-2.5">
+                    <User className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-bold text-[#111827] leading-tight">{item.product_name}</h4>
-                      <p className="text-[10px] text-[#4B5563] font-bold uppercase mt-1">Taille/Option: {item.variant_label} x{item.quantity}</p>
+                      <p className="text-[10px] text-gray-400 uppercase leading-none mb-1">Destinataire</p>
+                      <p className="text-gray-900 font-bold">{order.shipping_first_name} {order.shipping_last_name}</p>
                     </div>
                   </div>
-                  <span className="font-mono text-sm font-bold text-[#111827]">
-                    {formatPrice(item.line_total)}
-                  </span>
+                  
+                  {/* Phone */}
+                  <div className="flex items-start space-x-2.5">
+                    <Phone className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase leading-none mb-1">Téléphone</p>
+                      <p className="text-gray-900 font-bold font-mono">{order.shipping_phone}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Address */}
+                  <div className="flex items-start space-x-2.5">
+                    <MapPin className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase leading-none mb-1">Adresse de livraison</p>
+                      <p className="text-gray-900 font-bold">{order.shipping_address}</p>
+                      <p className="text-[#E63012] font-black mt-0.5">{order.shipping_city.toUpperCase()}</p>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
 
-            {/* Pricing Summary */}
-            <div className="border-t border-[#E5E7EB] pt-4 text-sm space-y-2">
-              <div className="flex justify-between text-[#4B5563]">
-                <span>Sous-total</span>
-                <span className="font-mono font-bold text-[#111827]">{formatPrice(order.subtotal)}</span>
+            {/* WhatsApp Integration Block */}
+            <div className="bg-[#EFFFF6] border border-[#C6F6D5] rounded-2xl p-6 shadow-sm text-center space-y-4 flex flex-col items-center">
+              <div className="p-2.5 bg-[#DCFCE7] rounded-full text-[#15803D]">
+                <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.017-5.114-2.871-6.973-1.854-1.859-4.33-2.88-6.967-2.881-5.441 0-9.869 4.42-9.873 9.863-.001 1.701.45 3.361 1.307 4.8l-.348 1.272.368-.345zm1.183-11.785c-.214-.478-.44-.488-.642-.496-.166-.007-.356-.007-.547-.007-.19 0-.5.07-.762.356-.262.285-1 .978-1 2.387 0 1.41 1.025 2.775 1.168 2.966.143.19 2.016 3.078 4.885 4.318.682.295 1.215.47 1.629.601.685.218 1.31.187 1.803.113.55-.082 1.688-.69 1.925-1.356.238-.666.238-1.238.167-1.356-.07-.119-.262-.19-.548-.333-.285-.143-1.688-.833-1.95-.928-.261-.095-.452-.143-.642.143-.19.285-.737.928-.904 1.119-.166.19-.333.214-.618.07-.285-.143-1.205-.444-2.296-1.417-.848-.756-1.421-1.69-1.587-1.976-.167-.285-.018-.44.125-.58.127-.127.285-.333.428-.5.143-.166.19-.285.285-.476.095-.19.048-.356-.024-.5-.071-.143-.642-1.547-.88-2.12z" />
+                </svg>
               </div>
-              {order.discount_amount > 0 && (
-                <div className="flex justify-between text-[#22C55E]">
-                  <span>Remises</span>
-                  <span className="font-mono font-bold">-{formatPrice(order.discount_amount)}</span>
-                </div>
-              )}
-              <div className="flex justify-between text-[#4B5563]">
-                <span>Frais de livraison</span>
-                <span className="font-mono font-bold text-[#111827]">
-                  {order.shipping_cost === 0 ? 'Gratuit' : formatPrice(order.shipping_cost)}
-                </span>
-              </div>
-              <div className="flex justify-between border-t border-[#E5E7EB] pt-3 text-base font-bold text-[#111827]">
-                <span>TOTAL À RÉGLER (COD)</span>
-                <span className="font-mono text-base text-[#E63012]">{formatPrice(order.total)}</span>
-              </div>
+              <h4 className="font-bold text-xs uppercase text-gray-900 tracking-wider">Des questions ?</h4>
+              <p className="text-[11px] text-gray-600 font-semibold leading-normal">
+                Cliquez pour envoyer les détails de votre commande directement sur WhatsApp à notre équipe commerciale.
+              </p>
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-[#22C55E] hover:bg-[#1eb052] text-white py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider inline-flex items-center justify-center space-x-2 transition-colors shadow border border-[#1eb052]"
+              >
+                <span>Envoyer sur WhatsApp</span>
+              </a>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Action back home */}
         <div className="text-center pt-4">
           <Link
             to="/boutique"
-            className="bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#E63012] text-[#111827] px-8 py-4 rounded font-display text-xs font-extrabold uppercase tracking-wider transition-colors inline-flex items-center space-x-2"
+            className="bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#E63012] text-[#111827] px-8 py-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-colors inline-flex items-center space-x-2 shadow-sm"
           >
             <Compass className="w-4 h-4" />
-            <span>CONTINUER LES ACHATS</span>
+            <span>Continuer les achats</span>
           </Link>
         </div>
 

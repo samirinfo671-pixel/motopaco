@@ -5,8 +5,8 @@ import { useCartStore } from '../../store/cart.ts';
 import { useUIStore } from '../../store/ui.ts';
 
 export const MobileNav: React.FC = () => {
-  const { items } = useCartStore();
-  const { setCartOpen } = useUIStore();
+  const items = useCartStore((state) => state.items);
+  const setCartOpen = useUIStore((state) => state.setCartOpen);
 
   const cartQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 

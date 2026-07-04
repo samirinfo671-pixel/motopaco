@@ -49,7 +49,10 @@ export const useCartStore = create<CartState>()(
 
         let newItems = [...items];
         if (existingIndex > -1) {
-          newItems[existingIndex].quantity += quantity;
+          newItems[existingIndex] = {
+            ...newItems[existingIndex],
+            quantity: newItems[existingIndex].quantity + quantity
+          };
         } else {
           newItems.push({ product, variant, quantity });
         }

@@ -8,6 +8,7 @@ import { useDebounce } from '../../hooks/useDebounce.ts';
 import { formatPrice } from '../../lib/formatters.ts';
 import api from '../../lib/api.ts';
 import { Product } from '../../types/product.ts';
+import { ProductImg } from '../product/ProductImg.tsx';
 
 /* ─── Mega-menu data ─────────────────────────────────────────── */
 const megaMenuData = [
@@ -301,9 +302,11 @@ const IconOil = () => (
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { items } = useCartStore();
-  const { user } = useAuthStore();
-  const { setCartOpen, setMobileNavOpen, isMobileNavOpen } = useUIStore();
+  const items = useCartStore((state) => state.items);
+  const user = useAuthStore((state) => state.user);
+  const setCartOpen = useUIStore((state) => state.setCartOpen);
+  const setMobileNavOpen = useUIStore((state) => state.setMobileNavOpen);
+  const isMobileNavOpen = useUIStore((state) => state.isMobileNavOpen);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -389,7 +392,7 @@ export const Header: React.FC = () => {
           className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-0"
           onClick={() => { setShowSearch(false); setMobileSearchOpen(false); }}
         >
-          <img src={p.primary_image} alt={p.name} referrerPolicy="no-referrer" className="w-10 h-10 object-cover rounded border border-gray-100 flex-shrink-0" />
+          <ProductImg src={p.primary_image} alt={p.name} fallbackText={p.name} className="w-10 h-10 object-contain rounded border border-gray-100 flex-shrink-0 bg-gray-50" />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-bold text-[#E63012] uppercase">{p.brand_name}</p>
             <p className="text-sm font-medium text-gray-800 truncate">{p.name}</p>

@@ -7,6 +7,7 @@ import { formatPrice } from '../lib/formatters.ts';
 import { trackInitiateCheckout, trackPurchase } from '../lib/pixels.ts';
 import api from '../lib/api.ts';
 import SEOHead from '../components/seo/SEOHead.tsx';
+import { ProductImg } from '../components/product/ProductImg.tsx';
 
 // 30 Moroccan cities dropdown list
 const MOROCCAN_CITIES = [
@@ -18,21 +19,19 @@ const MOROCCAN_CITIES = [
 
 export const Commande: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
-  const {
-    items,
-    promoCode,
-    deliveryMethod,
-    setDeliveryMethod,
-    shippingCity,
-    setShippingCity,
-    setShippingRates,
-    getSubtotal,
-    getDiscountAmount,
-    getTotal,
-    getShippingCost,
-    clearCart
-  } = useCartStore();
+  const user = useAuthStore((state) => state.user);
+  const items = useCartStore((state) => state.items);
+  const promoCode = useCartStore((state) => state.promoCode);
+  const deliveryMethod = useCartStore((state) => state.deliveryMethod);
+  const setDeliveryMethod = useCartStore((state) => state.setDeliveryMethod);
+  const shippingCity = useCartStore((state) => state.shippingCity);
+  const setShippingCity = useCartStore((state) => state.setShippingCity);
+  const setShippingRates = useCartStore((state) => state.setShippingRates);
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const getDiscountAmount = useCartStore((state) => state.getDiscountAmount);
+  const getTotal = useCartStore((state) => state.getTotal);
+  const getShippingCost = useCartStore((state) => state.getShippingCost);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   // Shipping Form State
   const [firstName, setFirstName] = useState(user?.first_name || '');
@@ -412,11 +411,11 @@ export const Commande: React.FC = () => {
               <div className="max-h-60 overflow-y-auto space-y-3 pr-2 divide-y divide-[#E5E7EB]/40">
                 {items.map((item) => (
                   <div key={item.variant.id} className="flex items-center space-x-3 pt-3 first:pt-0">
-                    <img
+                    <ProductImg
                       src={item.product.primary_image}
                       alt={item.product.name}
-                      referrerPolicy="no-referrer"
-                      className="w-12 h-12 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB]"
+                      fallbackText={item.product.name}
+                      className="w-12 h-12 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB] flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-[9px] font-mono text-[#E63012] font-black uppercase leading-none">{item.product.brand_name}</p>

@@ -65,7 +65,7 @@ router.post('/', (req, res) => {
         subtotal += lineTotal;
 
         // Decrement variant stock
-        db.prepare('UPDATE product_variants SET stock = stock - ? WHERE id = ?').run(item.quantity, item.variant_id);
+        db.prepare('UPDATE product_variants SET stock = MAX(0, stock - ?) WHERE id = ?').run(item.quantity, item.variant_id);
 
         validatedItems.push({
           product_id: item.product_id,
@@ -168,12 +168,6 @@ router.post('/', (req, res) => {
         db.prepare('UPDATE products SET sold_count = sold_count + ? WHERE id = ?').run(
           item.quantity,
           item.product_id
-        );
-
-        // Decrement variant stock
-        db.prepare('UPDATE product_variants SET stock = MAX(0, stock - ?) WHERE id = ?').run(
-          item.quantity,
-          item.variant_id
         );
       }
 

@@ -5,6 +5,7 @@ import api from '../lib/api.ts';
 import { Product, Category, Brand } from '../types/product.ts';
 import ProductGrid from '../components/product/ProductGrid.tsx';
 import SEOHead from '../components/seo/SEOHead.tsx';
+import { decodeHtml } from '../lib/formatters.ts';
 
 export const Boutique: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -66,8 +67,9 @@ export const Boutique: React.FC = () => {
           api.get('/categories'),
           api.get('/brands')
         ]);
-        setCategories(catsRes.data || []);
+        setCategories((catsRes.data || []).map((c: Category) => ({ ...c, name: decodeHtml(c.name) })));
         setBrands(brandsRes.data || []);
+
       } catch (err) {
         console.error('Error loading filter options:', err);
       }

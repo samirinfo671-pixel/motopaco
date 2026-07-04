@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../../types/product.ts';
 import { formatPrice } from '../../lib/formatters.ts';
+import { ProductImg } from './ProductImg.tsx';
 
 interface ProductCardProps {
   product: Product;
@@ -30,11 +31,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             ÉPUISÉ
           </span>
         )}
-        <img
+        <ProductImg
           src={product.primary_image}
           alt={product.name}
+          fallbackText={product.name}
           loading="lazy"
-          referrerPolicy="no-referrer"
           className="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
         />
       </div>
@@ -81,7 +82,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         <div className="mt-auto w-full">
-          {product.sale_price !== null ? (
+          {product.base_price <= 0 ? (
+            <div className="flex items-center justify-center mb-3">
+              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wide">
+                Prix sur demande
+              </span>
+            </div>
+          ) : product.sale_price !== null ? (
             <div className="flex items-center justify-center space-x-1.5 font-bold mb-3">
               <span className="text-[15px]" style={{ color: '#ff1a00' }}>
                 {formatPrice(product.sale_price)}
@@ -97,6 +104,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </span>
             </div>
           )}
+
 
           {/* Bottom Trust Badge */}
           <div className="w-full pt-2 border-t border-gray-100 flex items-center justify-center">

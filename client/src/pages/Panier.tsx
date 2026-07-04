@@ -3,21 +3,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Truck, HelpCircle } from 'lucide-react';
 import { useCartStore } from '../store/cart.ts';
 import { formatPrice } from '../lib/formatters.ts';
+import { ProductImg } from '../components/product/ProductImg.tsx';
 
 export const Panier: React.FC = () => {
   const navigate = useNavigate();
-  const {
-    items,
-    updateQuantity,
-    removeItem,
-    getSubtotal,
-    getBundleDiscount,
-    getMinOrderDiscount,
-    getShippingCost,
-    getDiscountAmount,
-    getTotal,
-    getFreeShippingProgress
-  } = useCartStore();
+  const items = useCartStore((state) => state.items);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const getBundleDiscount = useCartStore((state) => state.getBundleDiscount);
+  const getMinOrderDiscount = useCartStore((state) => state.getMinOrderDiscount);
+  const getShippingCost = useCartStore((state) => state.getShippingCost);
+  const getDiscountAmount = useCartStore((state) => state.getDiscountAmount);
+  const getTotal = useCartStore((state) => state.getTotal);
+  const getFreeShippingProgress = useCartStore((state) => state.getFreeShippingProgress);
 
   const subtotal = getSubtotal();
   const discount = getDiscountAmount();
@@ -73,10 +72,11 @@ export const Panier: React.FC = () => {
                     <div key={item.variant.id} className="p-4 md:grid grid-cols-12 items-center gap-4">
                       {/* Product details */}
                       <div className="col-span-12 md:col-span-6 flex items-center space-x-4">
-                        <img
+                        <ProductImg
                           src={item.product.primary_image}
                           alt={item.product.name}
-                          referrerPolicy="no-referrer"
+                          fallbackText={item.product.name}
+                          loading="lazy"
                           className="w-16 h-16 object-cover rounded bg-[#F9FAFB] border border-[#E5E7EB]"
                         />
                         <div className="min-w-0">

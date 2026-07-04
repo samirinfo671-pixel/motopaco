@@ -14,9 +14,9 @@ import { trackViewContent } from '../lib/pixels.ts';
 export const Produit: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { addItem } = useCartStore();
-  const { setCartOpen } = useUIStore();
-  const { user } = useAuthStore();
+  const addItem = useCartStore((state) => state.addItem);
+  const setCartOpen = useUIStore((state) => state.setCartOpen);
+  const user = useAuthStore((state) => state.user);
 
   const [product, setProduct] = useState<Product | null>(null);
   const [bundles, setBundles] = useState<Bundle[]>([]);

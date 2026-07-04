@@ -26,3 +26,13 @@ export function formatDate(dateString: string): string {
     return dateString;
   }
 }
+/**
+ * Decodes HTML entities from a string (e.g. &amp; → &, &lt; → <).
+ * Useful for strings stored in the DB that were imported from WooCommerce/WordPress.
+ */
+export function decodeHtml(str: string): string {
+  if (!str) return str;
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}

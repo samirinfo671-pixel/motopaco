@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
 import { ProductImage } from '../../types/product.ts';
+import { ProductImg } from './ProductImg.tsx';
 
 interface ImageGalleryProps {
   images: ProductImage[];
@@ -56,10 +57,9 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, activeImageO
                   : 'border-gray-200 hover:border-gray-400'
               }`}
             >
-              <img
+              <ProductImg
                 src={img.url}
                 alt={`Vue ${idx + 1}`}
-                referrerPolicy="no-referrer"
                 className="w-full h-full object-contain p-1"
               />
             </button>
@@ -70,10 +70,9 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, activeImageO
       {/* Main Image Frame */}
       <div className="flex-1 order-1 md:order-2">
         <div className="relative aspect-square w-full bg-white border border-gray-200 rounded-xl overflow-hidden group flex items-center justify-center">
-          <img
+          <ProductImg
             src={currentImage}
             alt={`Product View ${activeIndex + 1}`}
-            referrerPolicy="no-referrer"
             className="w-full h-full object-contain cursor-zoom-in p-4 transition-transform duration-300 group-hover:scale-105"
             onClick={() => setIsLightboxOpen(true)}
           />
@@ -145,10 +144,9 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, activeImageO
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          <img
+          <ProductImg
             src={currentImage}
             alt="Vue agrandie"
-            referrerPolicy="no-referrer"
             className="max-w-full max-h-[85vh] object-contain rounded-lg"
             onClick={(e) => e.stopPropagation()}
           />

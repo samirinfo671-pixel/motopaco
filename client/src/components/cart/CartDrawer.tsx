@@ -5,25 +5,25 @@ import { useCartStore } from '../../store/cart.ts';
 import { useUIStore } from '../../store/ui.ts';
 import { formatPrice } from '../../lib/formatters.ts';
 import api from '../../lib/api.ts';
+import { ProductImg } from '../product/ProductImg.tsx';
 
 export const CartDrawer: React.FC = () => {
   const navigate = useNavigate();
-  const { isCartOpen, setCartOpen } = useUIStore();
-  const {
-    items,
-    promoCode,
-    updateQuantity,
-    removeItem,
-    setPromoCode,
-    getSubtotal,
-    getBundleDiscount,
-    getMinOrderDiscount,
-    getShippingCost,
-    getDiscountAmount,
-    getTotal,
-    getFreeShippingProgress,
-    addItem
-  } = useCartStore();
+  const isCartOpen = useUIStore((state) => state.isCartOpen);
+  const setCartOpen = useUIStore((state) => state.setCartOpen);
+  const items = useCartStore((state) => state.items);
+  const promoCode = useCartStore((state) => state.promoCode);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const setPromoCode = useCartStore((state) => state.setPromoCode);
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const getBundleDiscount = useCartStore((state) => state.getBundleDiscount);
+  const getMinOrderDiscount = useCartStore((state) => state.getMinOrderDiscount);
+  const getShippingCost = useCartStore((state) => state.getShippingCost);
+  const getDiscountAmount = useCartStore((state) => state.getDiscountAmount);
+  const getTotal = useCartStore((state) => state.getTotal);
+  const getFreeShippingProgress = useCartStore((state) => state.getFreeShippingProgress);
+  const addItem = useCartStore((state) => state.addItem);
 
   const [promoInput, setPromoInput] = useState('');
   const [promoError, setPromoError] = useState('');
@@ -221,17 +221,11 @@ export const CartDrawer: React.FC = () => {
                     key={item.variant.id}
                     className="flex items-center space-x-4 bg-[#F9FAFB] border border-gray-200 p-3.5 rounded-lg shadow-sm hover:border-gray-300 transition-all duration-300"
                   >
-                    <img
-                      src={item.product.primary_image || '/placeholder-product.jpg'}
+                    <ProductImg
+                      src={item.product.primary_image}
                       alt={item.product.name}
-                      referrerPolicy="no-referrer"
-                      className="w-16 h-16 object-cover rounded-full bg-white border border-gray-200 flex-shrink-0"
-                      onError={(e) => {
-                        const t = e.currentTarget;
-                        if (!t.src.includes('placeholder')) {
-                          t.src = `https://placehold.co/64x64/f3f4f6/9ca3af?text=${encodeURIComponent(item.product.name.slice(0,2))}`;
-                        }
-                      }}
+                      fallbackText={item.product.name}
+                      className="w-16 h-16 object-contain rounded-full bg-white border border-gray-200 flex-shrink-0 p-1"
                     />
                     
                     <div className="flex-1 min-w-0">
