@@ -243,9 +243,29 @@ export function trackPurchase(order: { order_number: string; total: number; item
   console.log(`[TRACKING] Purchase: Order #${order.order_number}, Total: ${order.total} DH`);
   const w = window as any;
 
+  // Safe item normalization to handle both CartItem format (e.g. { product, variant, quantity })
+  // and Database OrderItem format (e.g. { product_id, product_name, unit_price, quantity })
+  const normalizedItems = (order.items || []).map(item => {
+    if (item && item.product) {
+      const price = item.variant?.price_override ?? item.product.sale_price ?? item.product.base_price ?? 0;
+      return {
+        product_id: item.product.id,
+        product_name: item.product.name,
+        unit_price: price,
+        quantity: item.quantity || 1
+      };
+    }
+    return {
+      product_id: item?.product_id || item?.id || 0,
+      product_name: item?.product_name || item?.name || 'Produit',
+      unit_price: item?.unit_price || item?.price || 0,
+      quantity: item?.quantity || 1
+    };
+  });
+
   if (w.fbq) {
     w.fbq('track', 'Purchase', {
-      content_ids: order.items.map(item => item.product_id.toString()),
+      content_ids: normalizedItems.map(item => item.product_id.toString()),
       content_type: 'product',
       value: order.total,
       currency: 'MAD',
@@ -268,10 +288,10 @@ export function trackPurchase(order: { order_number: string; total: number; item
         transaction_id: order.order_number,
         value: order.total,
         currency: 'MAD',
-        items: order.items.map(item => ({
+        items: normalizedItems.map(item => ({
           item_id: item.product_id.toString(),
-          item_name: item.product_name || item.name,
-          price: item.unit_price || item.price,
+          item_name: item.product_name,
+          price: item.unit_price,
           quantity: item.quantity
         }))
       }
