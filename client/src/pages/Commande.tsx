@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreditCard, Truck, ShieldCheck, MapPin, Phone, Mail, User, Info, Loader2 } from 'lucide-react';
 import { useCartStore } from '../store/cart.ts';
@@ -65,7 +65,9 @@ export const Commande: React.FC = () => {
 
   // Checkout flow state
   const [paymentMethod] = useState<'cod'>('cod');
-  const [isSuccess, setIsSuccess] = useState(false);
+  // Use a ref so the empty-cart guard reads the latest value synchronously
+  // (useState update is async and would cause a race with clearCart)
+  const isSuccessRef = useRef(false);
   
   const [validationError, setValidationError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,15 +77,15 @@ export const Commande: React.FC = () => {
   const shipping = getShippingCost();
   const total = getTotal();
 
-  // Redirect if cart is empty
+  // Redirect if cart is empty — only redirect when NOT in the middle of a successful checkout
   useEffect(() => {
-    if (items.length === 0 && !isSuccess) {
+    if (items.length === 0 && !isSuccessRef.current) {
       navigate('/panier');
     } else if (items.length > 0) {
       // Trigger Initiate Checkout Pixel event
       trackInitiateCheckout(total, items.length);
     }
-  }, [items, navigate, isSuccess]);
+  }, [items, navigate]);
 
   // If the active delivery method is express (from a previous session), fallback to standard
   useEffect(() => {
@@ -159,22 +161,24 @@ export const Commande: React.FC = () => {
       const response = await api.post('/orders', orderData);
       const { order } = response.data;
 
-      // Trigger Purchase pixel event
-      trackPurchase({
-        order_number: order.order_number,
-        total: order.total,
-        items: items
-      });
+      // Trigger Purchase pixel event (safe — won't throw)
+      try {
+        trackPurchase({
+          order_number: order.order_number,
+          total: order.total,
+          items: items
+        });
+      } catch (_) {}
 
+      // Mark success SYNCHRONOUSLY via ref BEFORE clearing the cart.
+      // This prevents the empty-cart useEffect guard from redirecting to /panier.
+      isSuccessRef.current = true;
 
-      // Set success flag to prevent empty cart redirect
-      setIsSuccess(true);
-
-      // Clear shopping cart
-      clearCart();
-
-      // Route to confirmation screen
+      // Navigate FIRST, then clear cart so the guard never fires against an empty cart
       navigate(`/confirmation?orderNumber=${order.order_number}&phone=${encodeURIComponent(orderData.shipping_phone)}`);
+
+      // Clear cart after navigation is queued
+      clearCart();
 
     } catch (err: any) {
       setValidationError(err.response?.data?.message || 'Erreur lors de la confirmation de votre commande. Veuillez vérifier vos stocks.');
